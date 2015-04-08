@@ -4,6 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import uk.ac.ebi.ddi.reader.model.CvParam;
+import uk.ac.ebi.ddi.reader.model.Project;
+import uk.ac.ebi.ddi.reader.model.Reference;
+import uk.ac.ebi.ddi.reader.model.Submission;
 import uk.ac.ebi.pride.data.model.CvParam;
 import uk.ac.ebi.pride.data.model.DataFile;
 import uk.ac.ebi.pride.data.model.Submission;
@@ -35,6 +39,7 @@ public class GenerateEBeyeXML {
     private static final Logger logger = LoggerFactory.getLogger(GenerateEBeyeXML.class);
     private static final String NOT_AVAILABLE = "Not available";
     private static final String OMICS_TYPE    = "Proteomics";
+    private Project project;
     private File outputDirectory;
     private HashMap<String, String> proteins;
 
@@ -48,12 +53,10 @@ public class GenerateEBeyeXML {
      * Constructor.
      *
      * @param project   (required) public project to be used for generating the EB-eye XML.
-     * @param submission    (required) public project submission summary to be used for generating the EB-eye XML.
      * @param outputDirectory   (required) target output directory.
      */
-    public GenerateEBeyeXML(Project project, Submission submission, File outputDirectory, HashMap<String, String> proteins) {
+    public GenerateEBeyeXML(Project project, File outputDirectory, HashMap<String, String> proteins) {
         this.project = project;
-        this.submission = submission;
         this.outputDirectory = outputDirectory;
         this.proteins = proteins;
     }
@@ -63,7 +66,7 @@ public class GenerateEBeyeXML {
      * @throws Exception
      */
     public void generate() throws Exception {
-        if (project==null || submission==null || outputDirectory==null) {
+        if (project==null || outputDirectory==null) {
             logger.error("The project, submission, and output directory all needs to be set before genearting EB-eye XML.");
         }
         if (!project.isPublicProject()) {
@@ -80,7 +83,7 @@ public class GenerateEBeyeXML {
 
             //Add the name of the database
             Element name = document.createElement("name");
-            name.appendChild(document.createTextNode("PRIDE Archive"));
+            name.appendChild(document.createTextNode(project.getRepositoryName()));
             database.appendChild(name);
 
             //Add the description of the database
@@ -130,10 +133,10 @@ public class GenerateEBeyeXML {
             Element crossReferences = document.createElement("cross_references");
             entry.appendChild(crossReferences);
 
-            if (submission.getProjectMetaData().getSpecies()!=null && submission.getProjectMetaData().getSpecies().size()>0) {
-                for (CvParam species : submission.getProjectMetaData().getSpecies()) {
+            if (project.getTaxonomies()!=null) {
+                for (String taxonomy : project.getTaxonomies()) {
                     Element refSpecies = document.createElement("ref");
-                    refSpecies.setAttribute("dbkey", species.getAccession());
+                    refSpecies.setAttribute("dbkey", taxonomy);
                     refSpecies.setAttribute("dbname", "TAXONOMY");
                     crossReferences.appendChild(refSpecies);
                 }

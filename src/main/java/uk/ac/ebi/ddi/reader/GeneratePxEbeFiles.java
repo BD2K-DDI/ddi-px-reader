@@ -37,7 +37,7 @@ public class GeneratePxEbeFiles {
             Integer loopGap = Integer.valueOf(ReadProperties.getInstance().getProperty("loopGap"));
 
             for(int i = startPoint; i < endPoint && loopGap > 0; i ++){
-                
+
             }
         } catch (IOException e) {
             e.printStackTrace();
