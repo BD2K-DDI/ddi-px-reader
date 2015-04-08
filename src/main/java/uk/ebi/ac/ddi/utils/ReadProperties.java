@@ -24,8 +24,11 @@ public class ReadProperties {
      */
     private ReadProperties() throws IOException {
         InputStream inputStream = ReadProperties.class.getClassLoader().getResourceAsStream("px.properties");
-        if (inputStream != null)
+        if (inputStream != null){
+            prop = new Properties();
             prop.load(inputStream);
+        }
+
     }
 
     /**
