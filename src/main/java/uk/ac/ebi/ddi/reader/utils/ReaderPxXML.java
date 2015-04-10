@@ -3,6 +3,9 @@ package uk.ac.ebi.ddi.reader.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import uk.ac.ebi.ddi.reader.model.Project;
@@ -48,7 +51,37 @@ public class ReaderPxXML {
      */
 
     private static Project parsedDocument(Document document) {
-        return null;
+
+        Project proj = new Project();
+
+        document.getDocumentElement().normalize();
+
+        System.out.println("Root element :" + document.getDocumentElement().getNodeName());
+
+        NodeList nList = document.getElementsByTagName(Constants.ROOT_NODE);
+
+        System.out.println("----------------------------");
+
+        for (int temp = 0; temp < nList.getLength(); temp++) {
+
+            Node nNode = nList.item(temp);
+
+            System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                Element eElement = (Element) nNode;
+
+                System.out.println("Staff id : " + eElement.getAttribute("id"));
+                System.out.println("First Name : " + eElement.getElementsByTagName("firstname").item(0).getTextContent());
+                System.out.println("Last Name : " + eElement.getElementsByTagName("lastname").item(0).getTextContent());
+                System.out.println("Nick Name : " + eElement.getElementsByTagName("nickname").item(0).getTextContent());
+                System.out.println("Salary : " + eElement.getElementsByTagName("salary").item(0).getTextContent());
+
+            }
+        }
+
+
     }
 
     /**
