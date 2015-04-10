@@ -27,7 +27,7 @@ public class GeneratePxEbeFiles {
 
     private static String PRIDE_PATTERN = "hostingRepository=\"PRIDE\"";
 
-    private static final String PXSUBMISSION_PATTERN = "id=\"PXD%s\"";
+    private static final String PXSUBMISSION_PATTERN = "<ProteomeXchangeDataset";
     /**
      * This program take an output folder as a parameter an create different EBE eyes files for
      * all the project in ProteomeXchange. It loop all the project in ProteomeCentral and print them to the give output
@@ -66,8 +66,10 @@ public class GeneratePxEbeFiles {
 
                 String page = getPage(pxURLProject);
 
-                if(isDataset(page, pxID) && !isPRIDEDataset(page)){
+                if (isDataset(page) && !isPRIDEDataset(page)){
                     System.out.print(page);
+                    ReaderPxXML.readProject(page);
+
                 }
             }
         } catch (IOException e) {
@@ -125,9 +127,8 @@ public class GeneratePxEbeFiles {
          return pxSubmission.contains(PRIDE_PATTERN);
     }
 
-    private static boolean isDataset(String pxSubmission, String pxID){
-        String pattern = String.format(PXSUBMISSION_PATTERN, pxID);
-        return pxSubmission.contains(pattern);
+    private static boolean isDataset(String pxSubmission){
+            return pxSubmission.contains(PXSUBMISSION_PATTERN);
     }
 
 
