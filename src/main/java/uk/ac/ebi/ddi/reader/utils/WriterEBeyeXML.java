@@ -1,4 +1,4 @@
-package uk.ac.ebi.ddi.reader;
+package uk.ac.ebi.ddi.reader.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,10 +7,7 @@ import org.w3c.dom.Element;
 import uk.ac.ebi.ddi.reader.model.CvParam;
 import uk.ac.ebi.ddi.reader.model.Project;
 import uk.ac.ebi.ddi.reader.model.Reference;
-import uk.ac.ebi.ddi.reader.model.Submission;
-import uk.ac.ebi.pride.data.model.CvParam;
-import uk.ac.ebi.pride.data.model.DataFile;
-import uk.ac.ebi.pride.data.model.Submission;
+import uk.ac.ebi.ddi.reader.model.Submitter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,16 +24,14 @@ import java.util.HashMap;
 /**
  * GenerateEBeyeXML object.
  *
- * Generates EB-eye search XML to a given output directory based upon a PRIDE Archive project
+ * Generates EB-eye search XML to a given output directory based upon a PX Submission project
  * supplied as a Project and Submission.
  *
  * @author  Yasset Perez-Riverol
- * @version 1.0
- * @since   2015-02-10
  */
-public class GenerateEBeyeXML {
+public class WriterEBeyeXML {
 
-    private static final Logger logger = LoggerFactory.getLogger(GenerateEBeyeXML.class);
+    private static final Logger logger = LoggerFactory.getLogger(WriterEBeyeXML.class);
     private static final String NOT_AVAILABLE = "Not available";
     private static final String OMICS_TYPE    = "Proteomics";
     private Project project;
@@ -46,7 +41,7 @@ public class GenerateEBeyeXML {
     /**
      * Constructor, without parameters.
      */
-    public GenerateEBeyeXML() {
+    public WriterEBeyeXML() {
     }
 
     /**
@@ -55,7 +50,7 @@ public class GenerateEBeyeXML {
      * @param project   (required) public project to be used for generating the EB-eye XML.
      * @param outputDirectory   (required) target output directory.
      */
-    public GenerateEBeyeXML(Project project, File outputDirectory, HashMap<String, String> proteins) {
+    public WriterEBeyeXML(Project project, File outputDirectory, HashMap<String, String> proteins) {
         this.project = project;
         this.outputDirectory = outputDirectory;
         this.proteins = proteins;
@@ -205,8 +200,8 @@ public class GenerateEBeyeXML {
             }
 
             //Add Instrument information
-            if (submission.getProjectMetaData().getInstruments()!=null && submission.getProjectMetaData().getInstruments().size()>0) {
-                for (CvParam instrument : submission.getProjectMetaData().getInstruments()) {
+            if (project.getInstruments()!=null && project.getInstruments().size()>0) {
+                for (CvParam instrument : project.getInstruments()) {
                     Element fieldInstruemnt = document.createElement("field");
                     fieldInstruemnt.setAttribute("name", "instrument");
                     fieldInstruemnt.appendChild(document.createTextNode(instrument.getName()));
@@ -220,8 +215,8 @@ public class GenerateEBeyeXML {
             }
 
             //Add information about the species
-            if (submission.getProjectMetaData().getSpecies()!=null && submission.getProjectMetaData().getSpecies().size()>0) {
-                for (CvParam species : submission.getProjectMetaData().getSpecies()) {
+            if (project.getSpecies()!=null && project.getSpecies().size()>0) {
+                for (CvParam species : project.getSpecies()) {
                     Element refSpecies = document.createElement("field");
                     refSpecies.setAttribute("name", "species");
                     refSpecies.appendChild(document.createTextNode(species.getName()));
@@ -235,8 +230,8 @@ public class GenerateEBeyeXML {
             }
 
             //Add information about the Cell Type
-            if (submission.getProjectMetaData().getCellTypes()!=null && submission.getProjectMetaData().getCellTypes().size()>0) {
-                for (CvParam cellType : submission.getProjectMetaData().getCellTypes()) {
+            if (project.getCellTypes()!=null && project.getCellTypes().size()>0) {
+                for (CvParam cellType : project.getCellTypes()) {
                     Element refCellType = document.createElement("field");
                     refCellType.setAttribute("name", "cell_type");
                     refCellType.appendChild(document.createTextNode(cellType.getName()));
@@ -250,8 +245,8 @@ public class GenerateEBeyeXML {
             }
 
             //Add disease information
-            if (submission.getProjectMetaData().getDiseases()!=null && submission.getProjectMetaData().getDiseases().size()>0) {
-                for (CvParam disease : submission.getProjectMetaData().getDiseases()) {
+            if (project.getDiseases()!=null && project.getDiseases().size()>0) {
+                for (CvParam disease : project.getDiseases()) {
                     Element refDisease = document.createElement("field");
                     refDisease.setAttribute("name", "disease");
                     refDisease.appendChild(document.createTextNode(disease.getName()));
@@ -265,8 +260,8 @@ public class GenerateEBeyeXML {
             }
 
             //Tissue information
-            if (submission.getProjectMetaData().getTissues()!=null && submission.getProjectMetaData().getTissues().size()>0) {
-                for (CvParam tissue : submission.getProjectMetaData().getTissues()) {
+            if (project.getTissues()!=null && project.getTissues().size()>0) {
+                for (CvParam tissue : project.getTissues()) {
                     Element fieldTissue = document.createElement("field");
                     fieldTissue.setAttribute("name", "tissue");
                     fieldTissue.appendChild(document.createTextNode(tissue.getName()));
@@ -281,7 +276,7 @@ public class GenerateEBeyeXML {
 
             //Add PTMs information
             if (project.getPtms()!=null && project.getPtms().size()>0) {
-                for (ProjectPTM ptmName : project.getPtms()) {
+                for (CvParam ptmName : project.getPtms()) {
                     Element modification = document.createElement("field");
                     modification.setAttribute("name", "modification");
                     modification.appendChild(document.createTextNode(ptmName.getName()));
@@ -296,7 +291,7 @@ public class GenerateEBeyeXML {
 
             //Add information about experiment type
             if (project.getExperimentTypes()!=null && project.getExperimentTypes().size()>0) {
-                for (ProjectExperimentType expType : project.getExperimentTypes()) {
+                for (CvParam expType : project.getExperimentTypes()) {
                     Element refExpType = document.createElement("field");
                     refExpType.setAttribute("name", "experiment_type");
                     refExpType.appendChild(document.createTextNode(expType.getName()));
@@ -311,10 +306,10 @@ public class GenerateEBeyeXML {
 
             //Add curator tags and keywords
             if (project.getProjectTags()!=null && project.getProjectTags().size()>0) {
-                for (ProjectTag projectTag : project.getProjectTags()) {
+                for (String projectTag : project.getProjectTags()) {
                     Element fieldProjTag = document.createElement("field");
                     fieldProjTag.setAttribute("name", "curator_keywords");
-                    fieldProjTag.appendChild(document.createTextNode(projectTag.getTag()));
+                    fieldProjTag.appendChild(document.createTextNode(projectTag));
                     additionalFields.appendChild(fieldProjTag);
                 }
             }
@@ -328,7 +323,7 @@ public class GenerateEBeyeXML {
 
             //Specific to proteomics field the quantitation method
             if (project.getQuantificationMethods()!=null && project.getQuantificationMethods().size()>0) {
-                for (ProjectQuantificationMethodCvParam quantMethod : project.getQuantificationMethods()) {
+                for (CvParam quantMethod : project.getQuantificationMethods()) {
                     Element refQuantMethod = document.createElement("field");
                     refQuantMethod.setAttribute("name", "quantification_method");
                     refQuantMethod.appendChild(document.createTextNode(quantMethod.getName()));
@@ -341,13 +336,8 @@ public class GenerateEBeyeXML {
                 additionalFields.appendChild(quantMethod);
             }
 
-            Element submissionType = document.createElement("field");
-            submissionType.setAttribute("name", "submission_type");
-            submissionType.appendChild(document.createTextNode(project.getSubmissionType().name()));
-            additionalFields.appendChild(submissionType);
-
             if (project.getSoftware()!=null && project.getSoftware().size()>0) {
-                for (ProjectSoftwareCvParam software : project.getSoftware()) {
+                for (CvParam software : project.getSoftware()) {
                     Element refSoftware = document.createElement("field");
                     refSoftware.setAttribute("name", "software");
                     refSoftware.appendChild(document.createTextNode(software.getValue()));
@@ -382,7 +372,7 @@ public class GenerateEBeyeXML {
             if(project.getSubmitter() != null){
                 Element submitter = document.createElement("submitter");
                 submitter.setAttribute("name", "submitter");
-                submitter.appendChild(document.createTextNode(project.getSubmitter().getFirstName() + " " + project.getSubmitter().getFirstName()));
+                submitter.appendChild(document.createTextNode(project.getSubmitter().getFirstName() + " " + project.getSubmitter().getLastName()));
                 additionalFields.appendChild(submitter);
 
                 Element submitterMail = document.createElement("submitter_mail");
@@ -418,11 +408,11 @@ public class GenerateEBeyeXML {
 
             //Add LabHead information
             if(project.getLabHeads() != null && !project.getLabHeads().isEmpty()){
-                for(LabHead labhead: project.getLabHeads()){
+                for(Submitter labhead: project.getLabHeads()){
 
                     Element submitter = document.createElement("submitter");
                     submitter.setAttribute("name", "submitter");
-                    submitter.appendChild(document.createTextNode(labhead.getFirstName() + " " + labhead.getFirstName()));
+                    submitter.appendChild(document.createTextNode(labhead.getFirstName() + " " + labhead.getLastName()));
                     additionalFields.appendChild(submitter);
 
                     Element submitterMail = document.createElement("submitter_mail");
@@ -438,11 +428,11 @@ public class GenerateEBeyeXML {
             }
 
             //Add original link to the files
-            if(submission.getDataFiles() != null && !submission.getDataFiles().isEmpty()){
-                for(DataFile file: submission.getDataFiles()){
+            if(project.getDataFiles() != null && !project.getDataFiles().isEmpty()){
+                for(String file: project.getDataFiles()){
                     Element dataset_link = document.createElement("dataset_file");
                     dataset_link.setAttribute("name", "dataset_file");
-                    dataset_link.appendChild(document.createTextNode(file.getUrl().toString()));
+                    dataset_link.appendChild(document.createTextNode(file));
                     additionalFields.appendChild(dataset_link);
                 }
             }
@@ -461,37 +451,5 @@ public class GenerateEBeyeXML {
             logger.info("Finished generating EB-eye XML file for: " + outputDirectory + File.separator + "PRIDE_EBEYE_" + project.getAccession() + ".xml" );
         }
 
-    }
-
-    /**
-     * Sets the current project.
-     * @param project   New project to be assigned.
-     */
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    /**
-     * Sets the current submission
-     * @param submission    New submission to be assigned.
-     */
-    public void setSubmission(Submission submission) {
-        this.submission = submission;
-    }
-
-    /**
-     * Sets the current output directory.
-     * @param outputDirectory   New output directory to be assigned.
-     */
-    public void setOutputDirectory(File outputDirectory) {
-        this.outputDirectory = outputDirectory;
-    }
-
-    /**
-     * Sets the current proteins set.
-     * @param proteins  New set of proteins.
-     */
-    public void setProteins(HashMap<String, String> proteins) {
-        this.proteins = proteins;
     }
 }

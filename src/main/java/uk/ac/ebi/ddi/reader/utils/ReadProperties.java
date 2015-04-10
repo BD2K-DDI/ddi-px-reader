@@ -1,6 +1,5 @@
-package uk.ebi.ac.ddi.utils;
+package uk.ac.ebi.ddi.reader.utils;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;

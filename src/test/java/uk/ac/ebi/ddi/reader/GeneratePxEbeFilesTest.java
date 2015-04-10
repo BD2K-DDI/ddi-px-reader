@@ -6,6 +6,6 @@ public class GeneratePxEbeFilesTest {
 
     @Test
     public void testReadRss() throws Exception {
-        GeneratePxEbeFiles.readRss();
+
     }
 }
