@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -15,7 +14,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.URL;
 
 /**
  * Reader using SAX the XML file
@@ -31,7 +29,7 @@ public class ReaderPxXML {
      * @param page PX XML file
      * @return Project object model
      */
-    public static Project readProject(String page){
+    public static Project readProject(String page) throws Exception {
 
         Project project = null;
 
@@ -45,43 +43,61 @@ public class ReaderPxXML {
     }
 
     /**
-     * Parse a Document using dom and the current data model
-     * @param document
-     * @return
+     * Parse a Document using dom and the current data model and fill the information of
+     * the project, including the medatadata.
+     * @param document XML Document
+     * @return Project
      */
 
-    private static Project parsedDocument(Document document) {
+    private static Project parsedDocument(Document document) throws Exception {
 
         Project proj = new Project();
 
         document.getDocumentElement().normalize();
 
-        System.out.println("Root element :" + document.getDocumentElement().getNodeName());
+        NodeList nList = document.getElementsByTagName(Constants.DATASET_SUMMARY_TAG);
 
-        NodeList nList = document.getElementsByTagName(Constants.ROOT_NODE);
-
-        System.out.println("----------------------------");
-
-        for (int temp = 0; temp < nList.getLength(); temp++) {
-
-            Node nNode = nList.item(temp);
-
-            System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
-            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-                Element eElement = (Element) nNode;
-
-                System.out.println("Staff id : " + eElement.getAttribute("id"));
-                System.out.println("First Name : " + eElement.getElementsByTagName("firstname").item(0).getTextContent());
-                System.out.println("Last Name : " + eElement.getElementsByTagName("lastname").item(0).getTextContent());
-                System.out.println("Nick Name : " + eElement.getElementsByTagName("nickname").item(0).getTextContent());
-                System.out.println("Salary : " + eElement.getElementsByTagName("salary").item(0).getTextContent());
-
-            }
-        }
+        proj = parseDatasetSummary(nList, proj);
 
 
+
+//        for (int iNode = 0; iNode < nList.getLength(); iNode++) {
+//
+//            Node nNode = nList.item(iNode);
+//
+//            if (nNode.getNodeName().equalsIgnoreCase(Constants.DATASET_SUMMARY_TAG)) {
+//
+//                Element eElement = (Element) nNode;
+//
+//                System.out.println("Staff id : " + eElement.getAttribute("id"));
+//                System.out.println("First Name : " + eElement.getElementsByTagName("firstname").item(0).getTextContent());
+//                System.out.println("Last Name : " + eElement.getElementsByTagName("lastname").item(0).getTextContent());
+//                System.out.println("Nick Name : " + eElement.getElementsByTagName("nickname").item(0).getTextContent());
+//                System.out.println("Salary : " + eElement.getElementsByTagName("salary").item(0).getTextContent());
+//
+//            }
+//        }
+        return proj;
+    }
+
+    /**
+     * Parse dataset summary for the project from the PX XML structure
+     * @param nList SAX object
+     * @param proj Project
+     * @return   Updated project
+     */
+    private static Project parseDatasetSummary(NodeList nList, Project proj) throws Exception {
+
+        if(nList.getLength() != 1)
+            throw new Exception("Problem in the PX submission schema");
+
+        Element node = (Element) nList.item(0);
+
+        String title = node.getAttribute(Constants.PXTITLE_TAG);
+
+        proj.setTitle(title);
+
+        return proj;
     }
 
     /**

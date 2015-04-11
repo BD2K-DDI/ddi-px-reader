@@ -1,8 +1,6 @@
 package uk.ac.ebi.ddi.reader.model;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.Dictionary;
 import java.util.List;
 
 /**
@@ -24,23 +22,41 @@ public class Project {
     private List<String>  taxonomies;
 
     private List<Reference> references;
+
     private Date submissionDate;
+
     private Date publicationDate;
+
     private String sampleProcessingProtocol;
+
     private String dataProcessingProtocol;
+
     private List<CvParam> instruments;
+
     private List<CvParam> cellTypes;
+
     private List<CvParam> diseases;
+
     private List<CvParam> tissues;
+
     private List<CvParam> ptms;
+
     private List<CvParam> experimentTypes;
+
     private List<String> projectTags;
+
     private String keywords;
+
     private List<CvParam> quantificationMethods;
+
     private List<CvParam> software;
+
     private String doi;
+
     private Submitter submitter;
+
     private List<Submitter> labHeads;
+
     private List<String> dataFiles;
 
     public boolean isPublicProject() {
@@ -145,5 +161,105 @@ public class Project {
 
     public List<String> getDataFiles() {
         return dataFiles;
+    }
+
+    public void setAccession(String accession) {
+        this.accession = accession;
+    }
+
+    public void setRepositoryName(String repositoryName) {
+        this.repositoryName = repositoryName;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setProjectDescription(String projectDescription) {
+        this.projectDescription = projectDescription;
+    }
+
+    public void setSpecies(List<CvParam> species) {
+        this.species = species;
+    }
+
+    public void setTaxonomies(List<String> taxonomies) {
+        this.taxonomies = taxonomies;
+    }
+
+    public void setReferences(List<Reference> references) {
+        this.references = references;
+    }
+
+    public void setSubmissionDate(Date submissionDate) {
+        this.submissionDate = submissionDate;
+    }
+
+    public void setPublicationDate(Date publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public void setSampleProcessingProtocol(String sampleProcessingProtocol) {
+        this.sampleProcessingProtocol = sampleProcessingProtocol;
+    }
+
+    public void setDataProcessingProtocol(String dataProcessingProtocol) {
+        this.dataProcessingProtocol = dataProcessingProtocol;
+    }
+
+    public void setInstruments(List<CvParam> instruments) {
+        this.instruments = instruments;
+    }
+
+    public void setCellTypes(List<CvParam> cellTypes) {
+        this.cellTypes = cellTypes;
+    }
+
+    public void setDiseases(List<CvParam> diseases) {
+        this.diseases = diseases;
+    }
+
+    public void setTissues(List<CvParam> tissues) {
+        this.tissues = tissues;
+    }
+
+    public void setPtms(List<CvParam> ptms) {
+        this.ptms = ptms;
+    }
+
+    public void setExperimentTypes(List<CvParam> experimentTypes) {
+        this.experimentTypes = experimentTypes;
+    }
+
+    public void setProjectTags(List<String> projectTags) {
+        this.projectTags = projectTags;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public void setQuantificationMethods(List<CvParam> quantificationMethods) {
+        this.quantificationMethods = quantificationMethods;
+    }
+
+    public void setSoftware(List<CvParam> software) {
+        this.software = software;
+    }
+
+    public void setDoi(String doi) {
+        this.doi = doi;
+    }
+
+    public void setSubmitter(Submitter submitter) {
+        this.submitter = submitter;
+    }
+
+    public void setLabHeads(List<Submitter> labHeads) {
+        this.labHeads = labHeads;
+    }
+
+    public void setDataFiles(List<String> dataFiles) {
+        this.dataFiles = dataFiles;
     }
 }
