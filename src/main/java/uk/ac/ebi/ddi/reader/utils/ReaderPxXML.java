@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Date;
 
 /**
  * Reader using SAX the XML file
@@ -93,9 +94,27 @@ public class ReaderPxXML {
 
         Element node = (Element) nList.item(0);
 
+        // Set Title of the dataset
         String title = node.getAttribute(Constants.PXTITLE_TAG);
-
         proj.setTitle(title);
+
+        // Set Repository
+        String repository = node.getAttribute(Constants.PXREPO_TAG);
+        proj.setRepositoryName(repository);
+
+        // Set Repository
+        String announceDate = node.getAttribute(Constants.PXANOUNDATE_TAG);
+        //Todo
+       // proj.setSubmissionDate(new Date(announceDate));
+
+        if(nList.item(0).hasChildNodes()){
+            NodeList nListDesc = ((Element) nList.item(0)).getElementsByTagName(Constants.PXDESC_TAG);
+            if(nListDesc.getLength() == 1){
+                Element elementDesc = (Element) nListDesc.item(0);
+                String description  = elementDesc.getTextContent();
+                proj.setProjectDescription(description);
+            }
+        }
 
         return proj;
     }
