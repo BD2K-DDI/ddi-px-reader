@@ -2,10 +2,7 @@ package uk.ac.ebi.ddi.reader.xml.px.io;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.ddi.reader.xml.px.model.CvParamType;
-import uk.ac.ebi.ddi.reader.xml.px.model.InstrumentType;
-import uk.ac.ebi.ddi.reader.xml.px.model.ProteomeXchangeDatasetType;
-import uk.ac.ebi.ddi.reader.xml.px.model.SpeciesType;
+import uk.ac.ebi.ddi.reader.xml.px.model.*;
 
 
 import javax.xml.bind.JAXBElement;
@@ -87,12 +84,27 @@ public class PxReader {
         return dataset.getValue().getInstrumentList().getInstrument();
     }
 
-
+    /**
+     * Get PTMs from PX Submission
+     * @return List of PTMs
+     */
     public List<CvParamType> getPtms() {
         return dataset.getValue().getModificationList().getCvParam();
     }
 
+    /**
+     * Get the List of Species including taxonomies and name of species
+     * @return
+     */
     public List<SpeciesType> getSpecies() {
         return dataset.getValue().getSpeciesList().getSpecies();
+    }
+
+    /**
+     * Get The list of Contacts including submitter and Lab heads
+     * @return List<ContactType>
+     */
+    public List<ContactType> getContactList() {
+        return dataset.getValue().getContactList().getContact();
     }
 }

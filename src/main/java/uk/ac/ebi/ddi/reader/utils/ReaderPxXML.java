@@ -9,11 +9,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import uk.ac.ebi.ddi.reader.model.CvParam;
 import uk.ac.ebi.ddi.reader.model.Project;
+import uk.ac.ebi.ddi.reader.model.Submitter;
 import uk.ac.ebi.ddi.reader.xml.px.io.PxReader;
-import uk.ac.ebi.ddi.reader.xml.px.model.CvParamType;
-import uk.ac.ebi.ddi.reader.xml.px.model.InstrumentType;
-import uk.ac.ebi.ddi.reader.xml.px.model.ProteomeXchangeDatasetType;
-import uk.ac.ebi.ddi.reader.xml.px.model.SpeciesType;
+import uk.ac.ebi.ddi.reader.xml.px.model.*;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
@@ -206,8 +204,30 @@ public class ReaderPxXML {
         //Set Species
         proj.setSpecies(transformSpecies(reader.getSpecies()));
 
+        //Set Taxonomies
+        proj.setTaxonomies(transformTaxonomies(reader.getSpecies()));
 
+        //
+        proj.setSubmitter(transformToSubmmiter(reader.getContactList()));
         return proj;
+    }
+
+    private static Submitter transformToSubmmiter(List<ContactType> contactList) {
+        return null;
+    }
+
+    /**
+     * Return all the taxonomies related with the File using the NCBI Taxonomy
+     * @param species all the species related with the file in CVTems
+     * @return The list of the accession in NCBI Taxonomy
+     */
+    private static List<String> transformTaxonomies(List<SpeciesType> species) {
+        List<String> taxonomies = new ArrayList<String>();
+        for(SpeciesType specie: species)
+            for(CvParamType cv: specie.getCvParam())
+                if(cv.getAccession().equalsIgnoreCase(Constants.TAXONOMY_ACCESSION))
+                    taxonomies.add(cv.getValue());
+        return taxonomies;
     }
 
     /**
@@ -219,10 +239,26 @@ public class ReaderPxXML {
         List<CvParam> cvParams = new ArrayList<>();
         if(species != null && species.size() > 0){
             for(SpeciesType specie: species){
-                cvParams.addAll(transformCVParamTypeList(specie.getCvParam()));
+                //Remove the species that are wrote in Taxonomy way.
+                List<CvParamType> finalCvs = removeCVParamTypeByAccession(specie.getCvParam(), Constants.TAXONOMY_ACCESSION);
+                cvParams.addAll(transformCVParamTypeList(finalCvs));
             }
         }
         return cvParams;
+    }
+
+    /**
+     * THis function remove all the terms that contains an specific accession Term.
+     * @param cvParam List of all CVParamsType
+     * @param taxonomyAccession the accession ID to be removed
+     * @return The final List of terms
+     */
+    private static List<CvParamType> removeCVParamTypeByAccession(List<CvParamType> cvParam, String taxonomyAccession) {
+        List<CvParamType> cvList = new ArrayList<CvParamType>();
+        for(CvParamType cv: cvParam)
+            if(!cv.getAccession().equalsIgnoreCase(taxonomyAccession))
+              cvList.add(cv);
+        return cvList;
     }
 
     /**

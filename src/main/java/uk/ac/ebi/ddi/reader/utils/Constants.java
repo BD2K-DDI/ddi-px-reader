@@ -13,4 +13,9 @@ public class Constants {
     public static final String PXANOUNDATE_TAG          = "announceDate";
     public static final String PXDESC_TAG               = "Description";
     public static final String PXREVIEW_TAG             = "ReviewLevel";
+
+    /**
+     * Ontology Terms Constants to be handle inside the system
+     */
+    public static final String TAXONOMY_ACCESSION       = "MS:1001467";
 }
