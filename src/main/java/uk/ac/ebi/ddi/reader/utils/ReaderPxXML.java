@@ -208,9 +208,32 @@ public class ReaderPxXML {
         //Set Taxonomies
         proj.setTaxonomies(transformTaxonomies(reader.getSpecies()));
 
-        //
+        //Set Submitter
         proj.setSubmitter(selectSubmitterFromContacts(reader.getContactList()));
+
+        //Set Lab heads
+        proj.setLabHeads(selectLabHeadsFromContacts(reader.getContactList()));
         return proj;
+
+    }
+
+    /**
+     * Select Lab Heads from the List of Contacts
+     * @param contactList
+     * @return List<Submitter>
+     */
+    private static List<Submitter> selectLabHeadsFromContacts(List<ContactType> contactList) {
+        List<Submitter> labHeads = new ArrayList<Submitter>();
+        for(ContactType contact: contactList){
+            if(contact.getCvParam() != null && contact.getCvParam().size() > 0){
+                for(CvParamType cv: contact.getCvParam()){
+                    if(cv.getAccession().equalsIgnoreCase(Constants.LABHEAD_ACCESSION)){
+                        labHeads.add(transformSubmitter(contact));
+                    }
+                }
+            }
+        }
+        return labHeads;
     }
 
     /**

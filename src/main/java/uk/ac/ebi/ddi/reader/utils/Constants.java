@@ -19,4 +19,5 @@ public class Constants {
      */
     public static final String TAXONOMY_ACCESSION       = "MS:1001467";
     public static final String SUBMITTER_ACCESSION      = "MS:1002037";
+    public static final String LABHEAD_ACCESSION        = "MS:1002332";
 }
