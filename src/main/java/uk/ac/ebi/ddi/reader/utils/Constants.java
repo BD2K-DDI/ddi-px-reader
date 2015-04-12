@@ -12,4 +12,5 @@ public class Constants {
     public static final String PXREPO_TAG               = "hostingRepository";
     public static final String PXANOUNDATE_TAG          = "announceDate";
     public static final String PXDESC_TAG               = "Description";
+    public static final String PXREVIEW_TAG             = "ReviewLevel";
 }

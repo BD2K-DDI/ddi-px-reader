@@ -8,13 +8,18 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import uk.ac.ebi.ddi.reader.model.Project;
+import uk.ac.ebi.ddi.reader.xml.px.io.PxReader;
+import uk.ac.ebi.ddi.reader.xml.px.model.ProteomeXchangeDatasetType;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+
+import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Date;
+
 
 /**
  * Reader using SAX the XML file
@@ -38,7 +43,10 @@ public class ReaderPxXML {
 
         if(document != null){
             project = parsedDocument(document);
+            project = parseDocument(page);
         }
+
+
 
         return project;
     }
@@ -105,8 +113,9 @@ public class ReaderPxXML {
         // Set Repository
         String announceDate = node.getAttribute(Constants.PXANOUNDATE_TAG);
         //Todo
-       // proj.setSubmissionDate(new Date(announceDate));
+        // proj.setSubmissionDate(new Date(announceDate));
 
+        //Set project description
         if(nList.item(0).hasChildNodes()){
             NodeList nListDesc = ((Element) nList.item(0)).getElementsByTagName(Constants.PXDESC_TAG);
             if(nListDesc.getLength() == 1){
@@ -114,7 +123,14 @@ public class ReaderPxXML {
                 String description  = elementDesc.getTextContent();
                 proj.setProjectDescription(description);
             }
+
+            NodeList nListReview = ((Element) nList.item(0)).getElementsByTagName(Constants.PXREVIEW_TAG);
+            if(nListReview.getLength() == 1){
+
+            }
         }
+
+
 
         return proj;
     }
@@ -147,6 +163,14 @@ public class ReaderPxXML {
         }
         // return DOM
         return doc;
+    }
+
+    public static Project parseDocument(String page) throws IOException, JAXBException {
+        Project proj = new Project();
+        InputStream in = org.apache.commons.io.IOUtils.toInputStream(page, "UTF-8");
+        PxReader reader = new PxReader(in);
+        ProteomeXchangeDatasetType dataset = reader.getDataset();
+        return proj;
     }
 
 
