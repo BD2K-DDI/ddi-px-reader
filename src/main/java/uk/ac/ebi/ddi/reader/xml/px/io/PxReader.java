@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ebi.ddi.reader.xml.px.model.CvParamType;
 import uk.ac.ebi.ddi.reader.xml.px.model.InstrumentType;
 import uk.ac.ebi.ddi.reader.xml.px.model.ProteomeXchangeDatasetType;
+import uk.ac.ebi.ddi.reader.xml.px.model.SpeciesType;
 
 
 import javax.xml.bind.JAXBElement;
@@ -27,6 +28,7 @@ public class PxReader {
     private Unmarshaller unmarshaller = null;
 
     private JAXBElement<ProteomeXchangeDatasetType> dataset = null;
+    private List<CvParamType> species;
 
 
     /**
@@ -86,4 +88,11 @@ public class PxReader {
     }
 
 
+    public List<CvParamType> getPtms() {
+        return dataset.getValue().getModificationList().getCvParam();
+    }
+
+    public List<SpeciesType> getSpecies() {
+        return dataset.getValue().getSpeciesList().getSpecies();
+    }
 }

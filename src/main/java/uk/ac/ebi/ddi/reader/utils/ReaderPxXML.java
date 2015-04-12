@@ -13,6 +13,7 @@ import uk.ac.ebi.ddi.reader.xml.px.io.PxReader;
 import uk.ac.ebi.ddi.reader.xml.px.model.CvParamType;
 import uk.ac.ebi.ddi.reader.xml.px.model.InstrumentType;
 import uk.ac.ebi.ddi.reader.xml.px.model.ProteomeXchangeDatasetType;
+import uk.ac.ebi.ddi.reader.xml.px.model.SpeciesType;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
@@ -199,10 +200,29 @@ public class ReaderPxXML {
         //Set Instrument
         proj.setInstruments(transformInstruments(reader.getInstruments()));
 
-        //Set
+        //Set Modifications
+        proj.setPtms(transformCVParamTypeList(reader.getPtms()));
+
+        //Set Species
+        proj.setSpecies(transformSpecies(reader.getSpecies()));
 
 
         return proj;
+    }
+
+    /**
+     * TRansform all species to CVParams
+     * @param species List of SpeciesType in PX XM file
+     * @return A List of cv
+     */
+    private static List<CvParam> transformSpecies(List<SpeciesType> species) {
+        List<CvParam> cvParams = new ArrayList<>();
+        if(species != null && species.size() > 0){
+            for(SpeciesType specie: species){
+                cvParams.addAll(transformCVParamTypeList(specie.getCvParam()));
+            }
+        }
+        return cvParams;
     }
 
     /**
