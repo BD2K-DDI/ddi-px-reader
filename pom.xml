@@ -61,9 +61,32 @@
             <version>${slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>rome</groupId>
-            <artifactId>rome</artifactId>
-            <version>${rome.version}</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>0.9.24</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>0.9.24</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+
+        <!-- jaxb dependencies-->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.2.4-1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-xjc</artifactId>
+            <version>2.2.4-1</version>
         </dependency>
 
     </dependencies>
@@ -97,6 +120,44 @@
             <url>http://repo1.maven.org/maven2/</url>
         </repository>
     </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- you can use this plugin to generate the unimod object model from
+                     the schema and binding files specified below. Note: this will
+                     need an explicit maven goal call, since it is not integrated
+                     into the standard mvn life cycle. The goal to use is:
+                     org.jvnet.jaxb2.maven2:maven-jaxb2-plugin:0.6.3:generate
+
+                     NOTE: the code generation may overwrite existing classes, so care
+                           should be taken with files that were manually modified.
+                 -->
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.7.3</version>
+
+                <configuration>
+                    <extension>true</extension>
+                    <schemaDirectory>src/main/resources</schemaDirectory>
+                    <schemaIncludes>
+                        <include>proteomeXchange-1.2.0.xsd</include>
+                    </schemaIncludes>
+                    <bindingDirectory>src/main/resources</bindingDirectory>
+                    <bindingIncludes>
+                        <include>px.xjb</include>
+                    </bindingIncludes>
+                    <generateDirectory>src/main/java2</generateDirectory>
+                    <removeOldOutput>false</removeOldOutput>
+                    <forceRegenerate>true</forceRegenerate>
+                    <verbose>true</verbose>
+                    <args>
+                        <arg>-no-header</arg>
+                    </args>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <distributionManagement>
         <!-- EBI repo -->
