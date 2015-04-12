@@ -2,6 +2,8 @@ package uk.ac.ebi.ddi.reader.xml.px.io;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.ddi.reader.xml.px.model.CvParamType;
+import uk.ac.ebi.ddi.reader.xml.px.model.InstrumentType;
 import uk.ac.ebi.ddi.reader.xml.px.model.ProteomeXchangeDatasetType;
 
 
@@ -9,6 +11,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
+import java.util.List;
 
 
 /**
@@ -23,7 +26,8 @@ public class PxReader {
      */
     private Unmarshaller unmarshaller = null;
 
-    private ProteomeXchangeDatasetType dataset = null;
+    private JAXBElement<ProteomeXchangeDatasetType> dataset = null;
+
 
     /**
      *
@@ -36,11 +40,48 @@ public class PxReader {
         }
         // create unmarshaller
         this.unmarshaller = PXUnmarshallerFactory.getInstance().initializeUnmarshaller();
-        JAXBElement<ProteomeXchangeDatasetType> datasetType = (JAXBElement<ProteomeXchangeDatasetType>) unmarshaller.unmarshal(xml);
-        System.out.println(datasetType);
+
+        dataset = (JAXBElement<ProteomeXchangeDatasetType>) unmarshaller.unmarshal(xml);
+
     }
 
-    public ProteomeXchangeDatasetType getDataset() {
-        return dataset;
+    /**
+     * Retrieve the accession of the dataset
+     * @return Accession
+     */
+    public String getAccession(){
+        return dataset.getValue().getId();
+    }
+
+    /**
+     * Return the repository Name
+     * @return name of repo
+     */
+    public String getRepositoryName(){
+        return dataset.getValue().getDatasetSummary().getHostingRepository().value();
+    }
+
+    /**
+     * Get dataset Description
+     * @return description
+     */
+    public String getTitle() {
+        return dataset.getValue().getDatasetSummary().getTitle();
+    }
+
+    /**
+     * Return the dataset description
+     * @return description
+     */
+    public String getDescription() {
+        return dataset.getValue().getDatasetSummary().getDescription();
+    }
+
+    /**
+     * Return the List of instruments related with the dataset
+     * @return List<InstrumentType>
+     */
+    public List<InstrumentType> getInstruments() {
+        return dataset.getValue().getInstrumentList().getInstrument();
     }
 }

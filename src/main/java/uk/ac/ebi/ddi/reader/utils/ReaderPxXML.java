@@ -7,8 +7,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import uk.ac.ebi.ddi.reader.model.CvParam;
 import uk.ac.ebi.ddi.reader.model.Project;
 import uk.ac.ebi.ddi.reader.xml.px.io.PxReader;
+import uk.ac.ebi.ddi.reader.xml.px.model.CvParamType;
+import uk.ac.ebi.ddi.reader.xml.px.model.InstrumentType;
 import uk.ac.ebi.ddi.reader.xml.px.model.ProteomeXchangeDatasetType;
 
 import javax.xml.bind.JAXBException;
@@ -19,6 +22,8 @@ import java.io.IOException;
 
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -165,12 +170,61 @@ public class ReaderPxXML {
         return doc;
     }
 
+    /**
+     * Parse the XML JAXB file into a Prject data model. It allows to map the information in the common
+     * data model for exporting.
+     * @param page the JAXB XML object
+     * @return  Project the project
+     * @throws IOException
+     * @throws JAXBException
+     */
     public static Project parseDocument(String page) throws IOException, JAXBException {
         Project proj = new Project();
+
         InputStream in = org.apache.commons.io.IOUtils.toInputStream(page, "UTF-8");
         PxReader reader = new PxReader(in);
-        ProteomeXchangeDatasetType dataset = reader.getDataset();
+
+        //Set accession
+        proj.setAccession(reader.getAccession());
+
+        //Set repository Name
+        proj.setRepositoryName(reader.getRepositoryName());
+
+        //Set title of the dataset
+        proj.setTitle(reader.getTitle());
+
+        //Set Project Description
+        proj.setProjectDescription(reader.getDescription());
+
+        //Set instrument
+        proj.setInstruments(transformInstruments(reader.getInstruments()));
+
+
         return proj;
+    }
+
+    private static List<CvParam> transformInstruments(List<InstrumentType> instruments) {
+        List<CvParam> cvParams = new ArrayList<>();
+        if(instruments != null && instruments.size() >0){
+            for(InstrumentType instrument: instruments){
+               cvParams.addAll(transformCVParamTypeList(instrument.getCvParam()));
+            }
+        }
+        return cvParams;
+    }
+
+    /**
+     * Convert List of CVParamsType to CVparams in the model
+     * @param params List of CVParams Type
+     * @return List of CvParams
+     */
+    private static List<CvParam> transformCVParamTypeList(List<CvParamType> params){
+        List<CvParam> cvParams = new ArrayList<>();
+        for(CvParamType cv: params){
+            CvParam param = new CvParam(cv.getAccession(), cv.getName(), cv.getUnitName(),cv.getValue());
+            cvParams.add(param);
+        }
+        return cvParams;
     }
 
 
