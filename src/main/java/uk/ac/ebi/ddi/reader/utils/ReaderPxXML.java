@@ -196,13 +196,20 @@ public class ReaderPxXML {
         //Set Project Description
         proj.setProjectDescription(reader.getDescription());
 
-        //Set instrument
+        //Set Instrument
         proj.setInstruments(transformInstruments(reader.getInstruments()));
+
+        //Set
 
 
         return proj;
     }
 
+    /**
+     * Transform a List of instruments to a List of CvParmas
+     * @param instruments List of instruments from PX submission
+     * @return List of CvParams
+     */
     private static List<CvParam> transformInstruments(List<InstrumentType> instruments) {
         List<CvParam> cvParams = new ArrayList<>();
         if(instruments != null && instruments.size() >0){

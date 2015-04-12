@@ -1,5 +1,6 @@
 package uk.ac.ebi.ddi.reader.model;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -58,6 +59,27 @@ public class Project {
     private List<Submitter> labHeads;
 
     private List<String> dataFiles;
+
+    /**
+     * Default constructor create a List of every list-based attribute
+     */
+    public Project() {
+        dataFiles             = Collections.emptyList();
+        labHeads              = Collections.emptyList();
+        software              = Collections.emptyList();
+        quantificationMethods = Collections.emptyList();;
+        projectTags           = Collections.emptyList();
+        experimentTypes       = Collections.emptyList();
+        ptms                  = Collections.emptyList();
+        tissues               = Collections.emptyList();
+        diseases              = Collections.emptyList();
+        cellTypes             = Collections.emptyList();
+        instruments           = Collections.emptyList();
+        references            = Collections.emptyList();
+        taxonomies            = Collections.emptyList();
+        species               = Collections.emptyList();
+
+    }
 
     public boolean isPublicProject() {
         return true;
