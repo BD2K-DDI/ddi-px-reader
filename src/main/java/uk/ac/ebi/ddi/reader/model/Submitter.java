@@ -5,9 +5,16 @@ package uk.ac.ebi.ddi.reader.model;
  */
 public class Submitter {
 
+    //First name
     private String firstName;
+
+    //Last Name
     private String lastName;
+
+    //email
     private String email;
+
+    //Affiliation
     private String affiliation;
 
     public String getFirstName() {
@@ -24,5 +31,21 @@ public class Submitter {
 
     public String getAffiliation() {
         return affiliation;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAffiliation(String affiliation) {
+        this.affiliation = affiliation;
     }
 }

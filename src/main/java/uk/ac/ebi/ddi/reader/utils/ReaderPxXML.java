@@ -12,6 +12,7 @@ import uk.ac.ebi.ddi.reader.model.Project;
 import uk.ac.ebi.ddi.reader.model.Submitter;
 import uk.ac.ebi.ddi.reader.xml.px.io.PxReader;
 import uk.ac.ebi.ddi.reader.xml.px.model.*;
+import uk.ac.ebi.pride.utilities.term.CvTermReference;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
@@ -208,12 +209,47 @@ public class ReaderPxXML {
         proj.setTaxonomies(transformTaxonomies(reader.getSpecies()));
 
         //
-        proj.setSubmitter(transformToSubmmiter(reader.getContactList()));
+        proj.setSubmitter(selectSubmitterFromContacts(reader.getContactList()));
         return proj;
     }
 
-    private static Submitter transformToSubmmiter(List<ContactType> contactList) {
-        return null;
+    /**
+     * Select from a List of Contacts the Submitter
+     * @param contactList  Contact List
+     * @return Submitter
+     */
+    private static Submitter selectSubmitterFromContacts(List<ContactType> contactList) {
+        Submitter submitter = new Submitter();
+        for(ContactType contact: contactList){
+            if(contact.getCvParam() != null && contact.getCvParam().size() > 0){
+                for(CvParamType cv: contact.getCvParam()){
+                    if(cv.getAccession().equalsIgnoreCase(Constants.SUBMITTER_ACCESSION)){
+                        return transformSubmitter(contact);
+                    }
+                }
+            }
+        }
+        return submitter;
+    }
+
+    /**
+     * Transform Submitter from contact to Submitter
+     * @param contact ContactType
+     * @return  Submitter
+     */
+    private static Submitter transformSubmitter(ContactType contact) {
+        Submitter submitter = new Submitter();
+        for(CvParamType cv: contact.getCvParam()){
+            if(cv.getAccession().equalsIgnoreCase(CvTermReference.CONTACT_NAME.getAccession()))
+                submitter.setFirstName(cv.getValue());
+
+            if(cv.getAccession().equalsIgnoreCase(CvTermReference.CONTACT_EMAIL.getAccession()))
+                submitter.setEmail(cv.getValue());
+
+            if(cv.getAccession().equalsIgnoreCase(CvTermReference.CONTACT_ORG.getAccession()))
+                submitter.setAffiliation(cv.getValue());
+       }
+        return submitter;
     }
 
     /**

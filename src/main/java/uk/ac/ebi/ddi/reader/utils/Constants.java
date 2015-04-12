@@ -18,4 +18,5 @@ public class Constants {
      * Ontology Terms Constants to be handle inside the system
      */
     public static final String TAXONOMY_ACCESSION       = "MS:1001467";
+    public static final String SUBMITTER_ACCESSION      = "MS:1002037";
 }
