@@ -159,4 +159,17 @@ public class PxReader {
          return dataset.getValue().getFullDatasetLinkList().getFullDatasetLink();
         return Collections.emptyList();
     }
+
+    /**
+     * List of Publications from PX
+     * @return List of publications
+     */
+    public List<PublicationType> getReferences() {
+        if(dataset.getValue().getPublicationList() != null &&
+                dataset.getValue().getPublicationList().getPublication() != null &&
+                dataset.getValue().getPublicationList().getPublication().size() > 0){
+            return dataset.getValue().getPublicationList().getPublication();
+        }
+        return Collections.emptyList();
+    }
 }

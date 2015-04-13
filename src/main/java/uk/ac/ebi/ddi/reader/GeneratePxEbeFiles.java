@@ -59,6 +59,8 @@ public class GeneratePxEbeFiles {
 
             Integer loopGap = Integer.valueOf(ReadProperties.getInstance().getProperty("loopGap"));
 
+            int initialGap = loopGap;
+
             for(int i = 0; i < endPoint && loopGap > 0; i ++){
 
                 String pxID = (pxPrefix + String.valueOf(i));
@@ -69,13 +71,22 @@ public class GeneratePxEbeFiles {
 
                 String page = getPage(pxURLProject);
 
-                if (page != null && isDataset(page) && !isPRIDEDataset(page)){
+                if (page != null && isDataset(page)){
 
-                    Project proj = ReaderPxXML.readProject(page);
-                    //Sometimes PeptideAtlas change the original identifier for that reason we need to override this value
-                    proj.setAccession("PX" + pxID);
-                    WriterEBeyeXML writer = new WriterEBeyeXML(proj,new File(outputFolder),null);
-                    writer.generate();
+                    if(!isPRIDEDataset(page)){
+                        Project proj = ReaderPxXML.readProject(page);
+
+                        //Sometimes PeptideAtlas change the original identifier for that reason we need to override this value
+                        proj.setAccession("PXD" + pxID);
+
+                        WriterEBeyeXML writer = new WriterEBeyeXML(proj,new File(outputFolder),null);
+                        writer.generate();
+
+                        loopGap = initialGap;
+                    }
+                }else{
+                    loopGap--;
+                    System.out.println("Current Gap: " + loopGap);
                 }
             }
         } catch (IOException e) {

@@ -3,12 +3,11 @@ package uk.ac.ebi.ddi.reader.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import uk.ac.ebi.ddi.reader.model.CvParam;
 import uk.ac.ebi.ddi.reader.model.Project;
+import uk.ac.ebi.ddi.reader.model.Reference;
 import uk.ac.ebi.ddi.reader.model.Submitter;
 import uk.ac.ebi.ddi.reader.xml.px.io.PxReader;
 import uk.ac.ebi.ddi.reader.xml.px.model.*;
@@ -24,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -98,10 +98,7 @@ public class ReaderPxXML {
         InputStream in = org.apache.commons.io.IOUtils.toInputStream(page, "UTF-8");
         PxReader reader = new PxReader(in);
 
-        //Set public
-
-
-        //Set accession
+       //Set accession
         proj.setAccession(reader.getAccession());
 
         //Set repository Name
@@ -152,8 +149,33 @@ public class ReaderPxXML {
         //Set the experiment Types
         proj.setExperimentTypes(transformExperimentTypes(reader.getSubmitterKeywords()));
 
+        proj.setReferences(transformReferences(reader.getReferences()));
+
         return proj;
 
+    }
+
+    /**
+     * Set references for the Project
+     * @param references
+     * @return
+     */
+    private static List<Reference> transformReferences(List<PublicationType> references) {
+        List<Reference> referenceList = new ArrayList<Reference>();
+        for(PublicationType publication: references){
+            Reference ref = new Reference();
+            for(CvParamType cv: publication.getCvParam()){
+               if(cv.getAccession().equalsIgnoreCase(Constants.PUBMED_ACCESSION)){
+                   ref.setPubmedId(Integer.parseInt(cv.getValue()));
+               }
+                if(!cv.getAccession().equalsIgnoreCase(Constants.PUBMED_ACCESSION)){
+                    ref.setReferenceLine(cv.getValue());
+                }
+            }
+            if(ref.getPubmedId() != null || ref.getReferenceLine() != null)
+                referenceList.add(ref);
+        }
+        return referenceList;
     }
 
     private static List<CvParam> transformExperimentTypes(List<CvParamType> submitterKeywords) {

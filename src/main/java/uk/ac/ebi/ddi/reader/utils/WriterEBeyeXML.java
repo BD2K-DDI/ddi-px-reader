@@ -140,10 +140,12 @@ public class WriterEBeyeXML {
 
             if (project.getReferences()!=null && project.getReferences().size()>0) {
                 for (Reference reference : project.getReferences()) {
-                    Element refPubMedID = document.createElement("ref");
-                    refPubMedID.setAttribute("dbkey", Integer.toString(reference.getPubmedId()));
-                    refPubMedID.setAttribute("dbname", "pubmed");
-                    crossReferences.appendChild(refPubMedID);
+                    if(reference.getPubmedId() != null){
+                        Element refPubMedID = document.createElement("ref");
+                        refPubMedID.setAttribute("dbkey", Integer.toString(reference.getPubmedId()));
+                        refPubMedID.setAttribute("dbname", "pubmed");
+                        crossReferences.appendChild(refPubMedID);
+                    }
                 }
             }
 
@@ -191,7 +193,7 @@ public class WriterEBeyeXML {
 
             if(project.getDatasetLink() != null){
                 Element repoLink = document.createElement("field");
-                omicsType.setAttribute("name", "datasetLink");
+                repoLink.setAttribute("name", "datasetLink");
                 repoLink.appendChild(document.createTextNode(project.getDatasetLink()));
                 additionalFields.appendChild(repoLink);
             }
@@ -378,10 +380,12 @@ public class WriterEBeyeXML {
             //Add publication related information
             if (project.getReferences()!=null && project.getReferences().size()>0) {
                 for (Reference reference : project.getReferences()) {
-                    Element refPubMedLine = document.createElement("field");
-                    refPubMedLine.setAttribute("name", "publication");
-                    refPubMedLine.appendChild(document.createTextNode(reference.getReferenceLine()));
-                    additionalFields.appendChild(refPubMedLine);
+                    if(reference.getReferenceLine() != null){
+                        Element refPubMedLine = document.createElement("field");
+                        refPubMedLine.setAttribute("name", "publication");
+                        refPubMedLine.appendChild(document.createTextNode(reference.getReferenceLine()));
+                        additionalFields.appendChild(refPubMedLine);
+                    }
                 }
             }
 
@@ -389,7 +393,7 @@ public class WriterEBeyeXML {
             if(project.getSubmitter() != null){
                 Element submitter = document.createElement("field");
                 submitter.setAttribute("name", "submitter");
-                submitter.appendChild(document.createTextNode(project.getSubmitter().getFirstName() + " " + project.getSubmitter().getLastName()));
+                submitter.appendChild(document.createTextNode(project.getSubmitter().getName()));
                 additionalFields.appendChild(submitter);
 
                 Element submitterMail = document.createElement("field");
@@ -410,7 +414,7 @@ public class WriterEBeyeXML {
 
                     Element submitter = document.createElement("field");
                     submitter.setAttribute("name", "labhead");
-                    submitter.appendChild(document.createTextNode(labhead.getFirstName() + " " + labhead.getLastName()));
+                    submitter.appendChild(document.createTextNode(labhead.getName()));
                     additionalFields.appendChild(submitter);
 
                     Element submitterMail = document.createElement("field");

@@ -48,4 +48,12 @@ public class Submitter {
     public void setAffiliation(String affiliation) {
         this.affiliation = affiliation;
     }
+
+    public String getName(){
+        String name = firstName;
+        if(lastName != null && lastName.length() > 0){
+            name = name + " " + lastName;
+        }
+        return name;
+    }
 }

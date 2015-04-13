@@ -25,10 +25,12 @@ public class Constants {
     public static final String CURATORKEY_ACCESSION     = "MS:1001926";
     public static final String MASSIVEURL_ACCESSION     = "MS:1002488";
     public static final String PASSELURL_ACCESSION      = "MS:1002420";
+    public static final String PUBMED_ACCESSION         = "MS:1000879";
 
     /**
      * Some keywords to be parse
      */
     public static final String SRM_KEYWORD              = "SRM";
     public static final String PXURL                    = "http://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=";
+
 }
