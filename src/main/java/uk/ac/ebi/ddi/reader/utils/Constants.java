@@ -30,6 +30,5 @@ public class Constants {
      * Some keywords to be parse
      */
     public static final String SRM_KEYWORD              = "SRM";
-    public static final String SILAC_KEYWORD            = "SILAC";
-    public static final String ITRAQ_KEYWORD            = "ITRAQ";
+    public static final String PXURL                    = "http://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=";
 }

@@ -46,79 +46,12 @@ public class ReaderPxXML {
 
         Project project = null;
 
-        Document document = getDomElement(page);
-
-        if(document != null)
+        if(page != null)
             project = parseDocument(page);
 
         return project;
     }
 
-    /**
-     * Parse a Document using dom and the current data model and fill the information of
-     * the project, including the medatadata.
-     * @param document XML Document
-     * @return Project
-     */
-
-    private static Project parsedDocument(Document document) throws Exception {
-
-        Project proj = new Project();
-
-        document.getDocumentElement().normalize();
-
-        NodeList nList = document.getElementsByTagName(Constants.DATASET_SUMMARY_TAG);
-
-        proj = parseDatasetSummary(nList, proj);
-
-        return proj;
-    }
-
-    /**
-     * Parse dataset summary for the project from the PX XML structure
-     * @param nList SAX object
-     * @param proj Project
-     * @return   Updated project
-     */
-    private static Project parseDatasetSummary(NodeList nList, Project proj) throws Exception {
-
-        if(nList.getLength() != 1)
-            throw new Exception("Problem in the PX submission schema");
-
-        Element node = (Element) nList.item(0);
-
-        // Set Title of the dataset
-        String title = node.getAttribute(Constants.PXTITLE_TAG);
-        proj.setTitle(title);
-
-        // Set Repository
-        String repository = node.getAttribute(Constants.PXREPO_TAG);
-        proj.setRepositoryName(repository);
-
-        // Set Repository
-        String announceDate = node.getAttribute(Constants.PXANOUNDATE_TAG);
-        //Todo
-        // proj.setSubmissionDate(new Date(announceDate));
-
-        //Set project description
-        if(nList.item(0).hasChildNodes()){
-            NodeList nListDesc = ((Element) nList.item(0)).getElementsByTagName(Constants.PXDESC_TAG);
-            if(nListDesc.getLength() == 1){
-                Element elementDesc = (Element) nListDesc.item(0);
-                String description  = elementDesc.getTextContent();
-                proj.setProjectDescription(description);
-            }
-
-            NodeList nListReview = ((Element) nList.item(0)).getElementsByTagName(Constants.PXREVIEW_TAG);
-            if(nListReview.getLength() == 1){
-
-            }
-        }
-
-
-
-        return proj;
-    }
 
     /**
      * Get a document from an String page.
@@ -159,6 +92,7 @@ public class ReaderPxXML {
      * @throws JAXBException
      */
     public static Project parseDocument(String page) throws IOException, JAXBException {
+
         Project proj = new Project();
 
         InputStream in = org.apache.commons.io.IOUtils.toInputStream(page, "UTF-8");
@@ -212,7 +146,10 @@ public class ReaderPxXML {
 
         //Set DatasetLink
         proj.setDatasetLink(transformGetDatasetLink(reader.getFullDatasetLink()));
+        if(proj.getDatasetLink() == null)
+            proj.setDatasetLink(Constants.PXURL+proj.getAccession());
 
+        //Set the experiment Types
         proj.setExperimentTypes(transformExperimentTypes(reader.getSubmitterKeywords()));
 
         return proj;

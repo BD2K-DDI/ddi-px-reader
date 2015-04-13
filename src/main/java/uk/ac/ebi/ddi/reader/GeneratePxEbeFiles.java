@@ -13,9 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.regex.Pattern;
+
 
 /**
  * This class read an RSS an retrieve the PX Id of all the available datasets.
@@ -60,7 +59,7 @@ public class GeneratePxEbeFiles {
 
             Integer loopGap = Integer.valueOf(ReadProperties.getInstance().getProperty("loopGap"));
 
-            for(int i = startPoint; i < endPoint && loopGap > 0; i ++){
+            for(int i = 0; i < endPoint && loopGap > 0; i ++){
 
                 String pxID = (pxPrefix + String.valueOf(i));
 
@@ -70,18 +69,20 @@ public class GeneratePxEbeFiles {
 
                 String page = getPage(pxURLProject);
 
-                if (isDataset(page) && !isPRIDEDataset(page)){
-                    System.out.print(page);
+                if (page != null && isDataset(page) && !isPRIDEDataset(page)){
+
                     Project proj = ReaderPxXML.readProject(page);
-                    //Sometimes PrtideaAtlas change the original identifier for that reason we need to override this value
+                    //Sometimes PeptideAtlas change the original identifier for that reason we need to override this value
                     proj.setAccession("PX" + pxID);
                     WriterEBeyeXML writer = new WriterEBeyeXML(proj,new File(outputFolder),null);
                     writer.generate();
                 }
             }
         } catch (IOException e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         } catch (Exception e){
+            logger.error(e.getMessage());
             e.printStackTrace();
         }
 
@@ -137,10 +138,4 @@ public class GeneratePxEbeFiles {
     private static boolean isDataset(String pxSubmission){
             return pxSubmission.contains(PXSUBMISSION_PATTERN);
     }
-
-
-
-
-
-
 }
