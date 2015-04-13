@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 
 /**
- * This class read an RSS an retrieve the PX Id of all the available datasets.
+ * This program takes a ProteomeXchange URL and generate for all the experiments the
  *
  * @author Yasset Perez-Riverol
  */
@@ -53,8 +53,6 @@ public class GeneratePxEbeFiles {
 
             String pxPrefix = ReadProperties.getInstance().getProperty("pxPrefix");
 
-            Integer startPoint = Integer.valueOf(ReadProperties.getInstance().getProperty("pxStart"));
-
             Integer endPoint   = Integer.valueOf(ReadProperties.getInstance().getProperty("pxEnd"));
 
             Integer loopGap = Integer.valueOf(ReadProperties.getInstance().getProperty("loopGap"));
@@ -74,6 +72,7 @@ public class GeneratePxEbeFiles {
                 if (page != null && isDataset(page)){
 
                     if(!isPRIDEDataset(page)){
+
                         Project proj = ReaderPxXML.readProject(page);
 
                         //Sometimes PeptideAtlas change the original identifier for that reason we need to override this value

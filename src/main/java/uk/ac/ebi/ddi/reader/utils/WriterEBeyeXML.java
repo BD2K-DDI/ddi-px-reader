@@ -432,7 +432,7 @@ public class WriterEBeyeXML {
             //Add original link to the files
             if(project.getDataFiles() != null && !project.getDataFiles().isEmpty()){
                 for(String file: project.getDataFiles()){
-                    Element dataset_link = document.createElement("dataset_file");
+                    Element dataset_link = document.createElement("field");
                     dataset_link.setAttribute("name", "dataset_file");
                     dataset_link.appendChild(document.createTextNode(file));
                     additionalFields.appendChild(dataset_link);
