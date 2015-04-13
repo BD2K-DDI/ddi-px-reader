@@ -213,8 +213,21 @@ public class ReaderPxXML {
         //Set DatasetLink
         proj.setDatasetLink(transformGetDatasetLink(reader.getFullDatasetLink()));
 
+        proj.setExperimentTypes(transformExperimentTypes(reader.getSubmitterKeywords()));
+
         return proj;
 
+    }
+
+    private static List<CvParam> transformExperimentTypes(List<CvParamType> submitterKeywords) {
+        List<CvParam> experimentTypes = new ArrayList<CvParam>();
+        for(CvParamType cvParamType: submitterKeywords){
+            if(cvParamType.getValue().contains(Constants.SRM_KEYWORD) || cvParamType.getName().contains("SRM")){
+                CvParam cvParam = new CvParam("PRIDE:0000311","SRM/MRM", "PRIDE", "SRM/MRM");
+                experimentTypes.add(cvParam);
+            }
+        }
+        return experimentTypes;
     }
 
     /**

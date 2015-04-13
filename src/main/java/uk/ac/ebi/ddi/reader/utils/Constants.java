@@ -26,4 +26,10 @@ public class Constants {
     public static final String MASSIVEURL_ACCESSION     = "MS:1002488";
     public static final String PASSELURL_ACCESSION      = "MS:1002420";
 
+    /**
+     * Some keywords to be parse
+     */
+    public static final String SRM_KEYWORD              = "SRM";
+    public static final String SILAC_KEYWORD            = "SILAC";
+    public static final String ITRAQ_KEYWORD            = "ITRAQ";
 }
