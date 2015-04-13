@@ -46,7 +46,7 @@ public class Project {
 
     private List<String> projectTags;
 
-    private String keywords;
+    private List<String> keywords;
 
     private List<CvParam> quantificationMethods;
 
@@ -59,6 +59,7 @@ public class Project {
     private List<Submitter> labHeads;
 
     private List<String> dataFiles;
+    private String datasetLink;
 
     /**
      * Default constructor create a List of every list-based attribute
@@ -157,7 +158,7 @@ public class Project {
         return projectTags;
     }
 
-    public String getKeywords() {
+    public List<String> getKeywords() {
         return keywords;
     }
 
@@ -257,7 +258,7 @@ public class Project {
         this.projectTags = projectTags;
     }
 
-    public void setKeywords(String keywords) {
+    public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
     }
 
@@ -285,4 +286,16 @@ public class Project {
         this.dataFiles = dataFiles;
     }
 
+    public void addCuratorKey(String reviewLevel) {
+        if(reviewLevel != null)
+            projectTags.add(reviewLevel);
+    }
+
+    public String getDatasetLink() {
+        return datasetLink;
+    }
+
+    public void setDatasetLink(String datasetLink) {
+        this.datasetLink = datasetLink;
+    }
 }

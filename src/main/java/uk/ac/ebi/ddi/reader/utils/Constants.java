@@ -20,4 +20,10 @@ public class Constants {
     public static final String TAXONOMY_ACCESSION       = "MS:1001467";
     public static final String SUBMITTER_ACCESSION      = "MS:1002037";
     public static final String LABHEAD_ACCESSION        = "MS:1002332";
+    public static final String SUBMITTERKEY_ACCESSION   = "MS:1001925";
+
+    public static final String CURATORKEY_ACCESSION     = "MS:1001926";
+    public static final String MASSIVEURL_ACCESSION     = "MS:1002488";
+    public static final String PASSELURL_ACCESSION      = "MS:1002420";
+
 }

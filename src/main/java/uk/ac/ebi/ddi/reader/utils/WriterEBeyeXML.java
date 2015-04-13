@@ -20,6 +20,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * GenerateEBeyeXML object.
@@ -32,17 +33,16 @@ import java.util.HashMap;
 public class WriterEBeyeXML {
 
     private static final Logger logger = LoggerFactory.getLogger(WriterEBeyeXML.class);
-    private static final String NOT_AVAILABLE = "Not available";
-    private static final String OMICS_TYPE    = "Proteomics";
-    private Project project;
-    private File outputDirectory;
-    private HashMap<String, String> proteins;
 
-    /**
-     * Constructor, without parameters.
-     */
-    public WriterEBeyeXML() {
-    }
+    private static final String NOT_AVAILABLE = "Not available";
+
+    private static final String OMICS_TYPE    = "Proteomics";
+
+    private Project project;
+
+    private File outputDirectory;
+
+    private Map<String, String> proteins;
 
     /**
      * Constructor.
@@ -50,10 +50,10 @@ public class WriterEBeyeXML {
      * @param project   (required) public project to be used for generating the EB-eye XML.
      * @param outputDirectory   (required) target output directory.
      */
-    public WriterEBeyeXML(Project project, File outputDirectory, HashMap<String, String> proteins) {
+    public WriterEBeyeXML(Project project, File outputDirectory, Map<String, String> proteins) {
         this.project = project;
         this.outputDirectory = outputDirectory;
-        this.proteins = proteins;
+        this.proteins = (proteins == null)? new HashMap<String,String>():proteins;
     }
 
     /**
@@ -61,6 +61,7 @@ public class WriterEBeyeXML {
      * @throws Exception
      */
     public void generate() throws Exception {
+
         if (project==null || outputDirectory==null) {
             logger.error("The project, submission, and output directory all needs to be set before genearting EB-eye XML.");
         }
@@ -158,16 +159,20 @@ public class WriterEBeyeXML {
             Element dates = document.createElement("dates");
             entry.appendChild(dates);
 
-            Element dateSubmitted = document.createElement("date");
-            dateSubmitted.setAttribute("value", new SimpleDateFormat("yyyy-MM-dd").format(project.getSubmissionDate()));
-            dateSubmitted.setAttribute("type", "submission");
-            dates.appendChild(dateSubmitted);
+            if(project.getSubmissionDate() != null){
+                Element dateSubmitted = document.createElement("date");
+                dateSubmitted.setAttribute("value", new SimpleDateFormat("yyyy-MM-dd").format(project.getSubmissionDate()));
+                dateSubmitted.setAttribute("type", "submission");
+                dates.appendChild(dateSubmitted);
+            }
 
-            Element datePublished = document.createElement("date");
-            datePublished.setAttribute("value", new SimpleDateFormat("yyyy-MM-dd").format(project.getPublicationDate()));
-            datePublished.setAttribute("type", "publication");
-            dates.appendChild(datePublished);
 
+            if(project.getPublicationDate() != null){
+                Element datePublished = document.createElement("date");
+                datePublished.setAttribute("value", new SimpleDateFormat("yyyy-MM-dd").format(project.getPublicationDate()));
+                datePublished.setAttribute("type", "publication");
+                dates.appendChild(datePublished);
+            }
 
             /**
              * Add additional Fields for DDI project to be able to find the projects. Specially additional metadata
@@ -182,6 +187,11 @@ public class WriterEBeyeXML {
             Element omicsType = document.createElement("omics_type");
             omicsType.appendChild(document.createTextNode(OMICS_TYPE));
             additionalFields.appendChild(omicsType);
+
+            Element repoLink = document.createElement("datasetLink");
+            omicsType.appendChild(document.createTextNode(project.getDatasetLink()));
+            additionalFields.appendChild(repoLink);
+
 
             //Add the Sample Processing Protocol
             if (project.getSampleProcessingProtocol()!=null && !project.getSampleProcessingProtocol().isEmpty()) {
@@ -219,7 +229,7 @@ public class WriterEBeyeXML {
                 for (CvParam species : project.getSpecies()) {
                     Element refSpecies = document.createElement("field");
                     refSpecies.setAttribute("name", "species");
-                    refSpecies.appendChild(document.createTextNode(species.getName()));
+                    refSpecies.appendChild(document.createTextNode(species.getValue()));
                     additionalFields.appendChild(refSpecies);
                 }
             } else {
@@ -315,10 +325,12 @@ public class WriterEBeyeXML {
             }
 
             if (project.getKeywords()!=null && !project.getKeywords().isEmpty()) {
-                Element keywords = document.createElement("field");
-                keywords.setAttribute("name", "submitter_keywords");
-                keywords.appendChild(document.createTextNode(project.getKeywords()));
-                additionalFields.appendChild(keywords);
+                for(String keyword: project.getKeywords()){
+                    Element keywords = document.createElement("field");
+                    keywords.setAttribute("name", "submitter_keywords");
+                    keywords.appendChild(document.createTextNode(keyword));
+                    additionalFields.appendChild(keywords);
+                }
             }
 
             //Specific to proteomics field the quantitation method

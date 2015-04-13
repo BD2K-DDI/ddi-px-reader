@@ -15,6 +15,7 @@ import uk.ac.ebi.ddi.reader.xml.px.model.*;
 import uk.ac.ebi.pride.utilities.term.CvTermReference;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -46,12 +48,8 @@ public class ReaderPxXML {
 
         Document document = getDomElement(page);
 
-        if(document != null){
-            project = parsedDocument(document);
+        if(document != null)
             project = parseDocument(page);
-        }
-
-
 
         return project;
     }
@@ -73,24 +71,6 @@ public class ReaderPxXML {
 
         proj = parseDatasetSummary(nList, proj);
 
-
-
-//        for (int iNode = 0; iNode < nList.getLength(); iNode++) {
-//
-//            Node nNode = nList.item(iNode);
-//
-//            if (nNode.getNodeName().equalsIgnoreCase(Constants.DATASET_SUMMARY_TAG)) {
-//
-//                Element eElement = (Element) nNode;
-//
-//                System.out.println("Staff id : " + eElement.getAttribute("id"));
-//                System.out.println("First Name : " + eElement.getElementsByTagName("firstname").item(0).getTextContent());
-//                System.out.println("Last Name : " + eElement.getElementsByTagName("lastname").item(0).getTextContent());
-//                System.out.println("Nick Name : " + eElement.getElementsByTagName("nickname").item(0).getTextContent());
-//                System.out.println("Salary : " + eElement.getElementsByTagName("salary").item(0).getTextContent());
-//
-//            }
-//        }
         return proj;
     }
 
@@ -184,6 +164,9 @@ public class ReaderPxXML {
         InputStream in = org.apache.commons.io.IOUtils.toInputStream(page, "UTF-8");
         PxReader reader = new PxReader(in);
 
+        //Set public
+
+
         //Set accession
         proj.setAccession(reader.getAccession());
 
@@ -213,8 +196,93 @@ public class ReaderPxXML {
 
         //Set Lab heads
         proj.setLabHeads(selectLabHeadsFromContacts(reader.getContactList()));
+
+        //Set Publication date
+        proj.setPublicationDate(transformDate(reader.getAnnounceDate()));
+
+        //Set Data Files
+        proj.setDataFiles(transformDataFiles(reader.getDataFiles()));
+
+        //Set Submitter keywords
+        proj.setKeywords(transformSubmitterKeywords(reader.getSubmitterKeywords()));
+
+        //Set Curator Keywords
+        proj.setProjectTags(transformCuratorKeywords(reader.getSubmitterKeywords()));
+        proj.addCuratorKey(reader.getReviewLevel());
+
+        //Set DatasetLink
+        proj.setDatasetLink(transformGetDatasetLink(reader.getFullDatasetLink()));
+
         return proj;
 
+    }
+
+    /**
+     * Retrieve information about the experiment URL
+     * @param fullDatasetLink experiment List URL
+     * @return experiment URL
+     */
+    private static String transformGetDatasetLink(List<FullDatasetLinkType> fullDatasetLink) {
+        if(fullDatasetLink != null && fullDatasetLink.size() >0){
+            for(FullDatasetLinkType datasetLink: fullDatasetLink)
+                if(datasetLink.getCvParam().getAccession().equalsIgnoreCase(Constants.MASSIVEURL_ACCESSION) ||
+                   datasetLink.getCvParam().getAccession().equalsIgnoreCase(Constants.PASSELURL_ACCESSION))
+                    return datasetLink.getCvParam().getValue();
+        }
+        return null;
+    }
+
+    /**
+     * Retrieve the curator keywords
+     * @param submitterKeywords
+     * @return List<String> List of keywords
+     */
+    private static List<String> transformCuratorKeywords(List<CvParamType> submitterKeywords) {
+        List<String> keywords = new ArrayList<String>();
+        for(CvParamType cv: submitterKeywords)
+            if(cv.getAccession().equalsIgnoreCase(Constants.CURATORKEY_ACCESSION))
+                keywords.add(cv.getValue());
+        return keywords;
+    }
+
+    /**
+     * Read Submitter keywords
+     * @param submitterKeywords List<CvParamType>
+     * @return List of keys
+     */
+    private static List<String> transformSubmitterKeywords(List<CvParamType> submitterKeywords) {
+        List<String> keywords = new ArrayList<String>();
+        for(CvParamType cv: submitterKeywords){
+            if(cv.getAccession().equalsIgnoreCase(Constants.SUBMITTERKEY_ACCESSION))
+                keywords.add(cv.getValue());
+        }
+        return keywords;
+    }
+
+    /**
+     * Return the list of File Name related with the Dataset
+     * @param dataFiles List<DatasetFileType>
+     * @return          List<String>
+     */
+    private static List<String> transformDataFiles(List<DatasetFileType> dataFiles) {
+        List<String> files = new ArrayList<String>();
+        for(DatasetFileType file: dataFiles){
+           if(file.getCvParam() != null && file.getCvParam().size() > 0){
+               for(CvParamType cv: file.getCvParam()){
+                   files.add(cv.getValue());
+               }
+           }
+        }
+        return files;
+    }
+
+    /**
+     * Change the GregorianCalendar Date to Date
+     * @param announceDate
+     * @return
+     */
+    private static Date transformDate(XMLGregorianCalendar announceDate) {
+        return announceDate.toGregorianCalendar().getTime();
     }
 
     /**
