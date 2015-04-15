@@ -335,7 +335,7 @@ public class ReaderPxXML {
      * @return A List of cv
      */
     private static List<CvParam> transformSpecies(List<SpeciesType> species) {
-        List<CvParam> cvParams = new ArrayList<>();
+        List<CvParam> cvParams = new ArrayList<CvParam>();
         if(species != null && species.size() > 0){
             for(SpeciesType specie: species){
                 //Remove the species that are wrote in Taxonomy way.
@@ -366,7 +366,7 @@ public class ReaderPxXML {
      * @return List of CvParams
      */
     private static List<CvParam> transformInstruments(List<InstrumentType> instruments) {
-        List<CvParam> cvParams = new ArrayList<>();
+        List<CvParam> cvParams = new ArrayList<CvParam>();
         if(instruments != null && instruments.size() >0){
             for(InstrumentType instrument: instruments){
                cvParams.addAll(transformCVParamTypeList(instrument.getCvParam()));
@@ -381,7 +381,7 @@ public class ReaderPxXML {
      * @return List of CvParams
      */
     private static List<CvParam> transformCVParamTypeList(List<CvParamType> params){
-        List<CvParam> cvParams = new ArrayList<>();
+        List<CvParam> cvParams = new ArrayList<CvParam>();
         for(CvParamType cv: params){
             CvParam param = new CvParam(cv.getAccession(), cv.getName(), cv.getUnitName(),cv.getValue());
             cvParams.add(param);
