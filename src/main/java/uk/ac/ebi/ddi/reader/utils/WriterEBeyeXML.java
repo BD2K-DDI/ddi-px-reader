@@ -391,41 +391,48 @@ public class WriterEBeyeXML {
 
             //Add submitter information
             if(project.getSubmitter() != null){
-                Element submitter = document.createElement("field");
-                submitter.setAttribute("name", "submitter");
-                submitter.appendChild(document.createTextNode(project.getSubmitter().getName()));
-                additionalFields.appendChild(submitter);
-
-                Element submitterMail = document.createElement("field");
-                submitterMail.setAttribute("name", "submitter_mail");
-                submitterMail.appendChild(document.createTextNode(project.getSubmitter().getEmail()));
-                additionalFields.appendChild(submitterMail);
-
-                Element submitterAffiliation = document.createElement("field");
-                submitterAffiliation.setAttribute("name", "submitter_affiliation");
-                submitterAffiliation.appendChild(document.createTextNode(project.getSubmitter().getAffiliation()));
-                additionalFields.appendChild(submitterAffiliation);
-
+                if(project.getSubmitter().getName() != null){
+                    Element submitter = document.createElement("field");
+                    submitter.setAttribute("name", "submitter");
+                    submitter.appendChild(document.createTextNode(project.getSubmitter().getName()));
+                    additionalFields.appendChild(submitter);
+                }
+                if(project.getSubmitter().getEmail() != null){
+                    Element submitterMail = document.createElement("field");
+                    submitterMail.setAttribute("name", "submitter_mail");
+                    submitterMail.appendChild(document.createTextNode(project.getSubmitter().getEmail()));
+                    additionalFields.appendChild(submitterMail);
+                }
+                if(project.getSubmitter().getAffiliation() != null){
+                    Element submitterAffiliation = document.createElement("field");
+                    submitterAffiliation.setAttribute("name", "submitter_affiliation");
+                    submitterAffiliation.appendChild(document.createTextNode(project.getSubmitter().getAffiliation()));
+                    additionalFields.appendChild(submitterAffiliation);
+                }
             }
 
             //Add LabHead information
             if(project.getLabHeads() != null && !project.getLabHeads().isEmpty()){
                 for(Submitter labhead: project.getLabHeads()){
+                    if(labhead.getName() != null){
+                        Element submitter = document.createElement("field");
+                        submitter.setAttribute("name", "labhead");
+                        submitter.appendChild(document.createTextNode(labhead.getName()));
+                        additionalFields.appendChild(submitter);
+                    }
+                    if(labhead.getEmail() != null){
+                        Element submitterMail = document.createElement("field");
+                        submitterMail.setAttribute("name", "labhead_mail");
+                        submitterMail.appendChild(document.createTextNode(labhead.getEmail()));
+                        additionalFields.appendChild(submitterMail);
+                    }
+                    if(labhead.getAffiliation() != null){
+                        Element submitterAffiliation = document.createElement("field");
+                        submitterAffiliation.setAttribute("name", "labhead_affiliation");
+                        submitterAffiliation.appendChild(document.createTextNode(labhead.getAffiliation()));
+                        additionalFields.appendChild(submitterAffiliation);
+                    }
 
-                    Element submitter = document.createElement("field");
-                    submitter.setAttribute("name", "labhead");
-                    submitter.appendChild(document.createTextNode(labhead.getName()));
-                    additionalFields.appendChild(submitter);
-
-                    Element submitterMail = document.createElement("field");
-                    submitterMail.setAttribute("name", "labhead_mail");
-                    submitterMail.appendChild(document.createTextNode(labhead.getEmail()));
-                    additionalFields.appendChild(submitterMail);
-
-                    Element submitterAffiliation = document.createElement("field");
-                    submitterAffiliation.setAttribute("name", "labhead_affiliation");
-                    submitterAffiliation.appendChild(document.createTextNode(labhead.getAffiliation()));
-                    additionalFields.appendChild(submitterAffiliation);
                 }
             }
 

@@ -1,5 +1,6 @@
 package uk.ac.ebi.ddi.reader.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -166,7 +167,9 @@ public class ReaderPxXML {
             Reference ref = new Reference();
             for(CvParamType cv: publication.getCvParam()){
                if(cv.getAccession().equalsIgnoreCase(Constants.PUBMED_ACCESSION)){
-                   ref.setPubmedId(Integer.parseInt(cv.getValue()));
+                   if(cv.getValue() != null && cv.getValue().length() > 0 &&
+                           StringUtils.isNumeric(cv.getValue()))
+                                   ref.setPubmedId(Integer.parseInt(cv.getValue()));
                }
                 if(!cv.getAccession().equalsIgnoreCase(Constants.PUBMED_ACCESSION)){
                     ref.setReferenceLine(cv.getValue());
