@@ -38,6 +38,8 @@ public class WriterEBeyeXML {
 
     private static final String OMICS_TYPE    = "Proteomics";
 
+    private static final String DEFAULT_EXPERIMENT_TYPE = "Mass Spectrometry";
+
     private Project project;
 
     private File outputDirectory;
@@ -193,11 +195,25 @@ public class WriterEBeyeXML {
 
             if(project.getDatasetLink() != null){
                 Element repoLink = document.createElement("field");
-                repoLink.setAttribute("name", "datasetLink");
+                repoLink.setAttribute("name", "full_dataset_link");
                 repoLink.appendChild(document.createTextNode(project.getDatasetLink()));
                 additionalFields.appendChild(repoLink);
             }
 
+            if(project.getSubmissionDate() != null){
+                Element submissionDate = document.createElement("field");
+                submissionDate.setAttribute("name", "submission_date");
+                submissionDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getSubmissionDate())));
+                additionalFields.appendChild(submissionDate);
+            }
+
+
+            if(project.getPublicationDate() != null){
+                Element publicationDate = document.createElement("field");
+                publicationDate.setAttribute("name", "publication_date");
+                publicationDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getPublicationDate())));
+                additionalFields.appendChild(publicationDate);
+            }
 
 
             //Add the Sample Processing Protocol
@@ -220,13 +236,13 @@ public class WriterEBeyeXML {
             if (project.getInstruments()!=null && project.getInstruments().size()>0) {
                 for (CvParam instrument : project.getInstruments()) {
                     Element fieldInstruemnt = document.createElement("field");
-                    fieldInstruemnt.setAttribute("name", "instrument");
+                    fieldInstruemnt.setAttribute("name", "instrument_platform");
                     fieldInstruemnt.appendChild(document.createTextNode(instrument.getName()));
                     additionalFields.appendChild(fieldInstruemnt);
                 }
             } else {
                 Element fieldInstruemnt = document.createElement("field");
-                fieldInstruemnt.setAttribute("name", "instrument");
+                fieldInstruemnt.setAttribute("name", "instrument_platform");
                 fieldInstruemnt.appendChild(document.createTextNode(NOT_AVAILABLE));
                 additionalFields.appendChild(fieldInstruemnt);
             }
@@ -310,14 +326,14 @@ public class WriterEBeyeXML {
             if (project.getExperimentTypes()!=null && project.getExperimentTypes().size()>0) {
                 for (CvParam expType : project.getExperimentTypes()) {
                     Element refExpType = document.createElement("field");
-                    refExpType.setAttribute("name", "experiment_type");
+                    refExpType.setAttribute("name", "technology_type");
                     refExpType.appendChild(document.createTextNode(expType.getName()));
                     additionalFields.appendChild(refExpType);
                 }
             } else {
                 Element refExpType = document.createElement("field");
-                refExpType.setAttribute("name", "experiment_type");
-                refExpType.appendChild(document.createTextNode(NOT_AVAILABLE));
+                refExpType.setAttribute("name", "technology_type");
+                refExpType.appendChild(document.createTextNode(DEFAULT_EXPERIMENT_TYPE));
                 additionalFields.appendChild(refExpType);
             }
 

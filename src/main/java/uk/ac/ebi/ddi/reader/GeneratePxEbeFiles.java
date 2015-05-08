@@ -80,8 +80,6 @@ public class GeneratePxEbeFiles {
 
                         WriterEBeyeXML writer = new WriterEBeyeXML(proj,new File(outputFolder),null);
                         writer.generate();
-
-
                     }
 
                     loopGap = initialGap;
