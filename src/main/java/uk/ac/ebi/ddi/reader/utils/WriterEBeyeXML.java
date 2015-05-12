@@ -200,20 +200,28 @@ public class WriterEBeyeXML {
                 additionalFields.appendChild(repoLink);
             }
 
-            if(project.getSubmissionDate() != null){
-                Element submissionDate = document.createElement("field");
-                submissionDate.setAttribute("name", "submission_date");
-                submissionDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getSubmissionDate())));
-                additionalFields.appendChild(submissionDate);
-            }
+//            if(project.getSubmissionDate() != null){
+//                Element submissionDate = document.createElement("field");
+//                submissionDate.setAttribute("name", "submission_date");
+//                submissionDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getSubmissionDate())));
+//                additionalFields.appendChild(submissionDate);
+//            }
 
 
-            if(project.getPublicationDate() != null){
-                Element publicationDate = document.createElement("field");
-                publicationDate.setAttribute("name", "publication_date");
-                publicationDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getPublicationDate())));
-                additionalFields.appendChild(publicationDate);
-            }
+            //Add the domain source
+            Element respository = document.createElement("field");
+            respository.setAttribute("name", "repository");
+            respository.appendChild(document.createTextNode(project.getRepositoryName()));
+            additionalFields.appendChild(respository);
+
+
+//            //Add the Sample Processing Protocol
+//            if(project.getPublicationDate() != null){
+//                Element publicationDate = document.createElement("field");
+//                publicationDate.setAttribute("name", "publication_date");
+//                publicationDate.appendChild(document.createTextNode(new SimpleDateFormat("yyyy-MM-dd").format(project.getPublicationDate())));
+//                additionalFields.appendChild(publicationDate);
+//            }
 
 
             //Add the Sample Processing Protocol
