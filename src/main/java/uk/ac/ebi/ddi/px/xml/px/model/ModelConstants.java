@@ -5,6 +5,6 @@ package uk.ac.ebi.ddi.px.xml.px.model;
  */
 public class ModelConstants {
 
-    public static final String MODEL_PKG = "uk.ac.ebi.ddi.reader.xml.px.model";
+    public static final String MODEL_PKG = "uk.ac.ebi.ddi.px.xml.px.model";
 
 }
