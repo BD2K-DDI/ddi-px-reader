@@ -14,7 +14,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -32,6 +34,9 @@ public class GeneratePxEbeFiles {
     private static String PRIDE_PATTERN = "hostingRepository=\"PRIDE\"";
 
     private static final String PXSUBMISSION_PATTERN = "<ProteomeXchangeDataset";
+
+    private static List<String> databases = Arrays.asList("PRIDE", "MassIVE", "PeptideAtlas");
+
     /**
      * This program take an output folder as a parameter an create different EBE eyes files for
      * all the project in ProteomeXchange. It loop all the project in ProteomeCentral and print them to the give output
@@ -56,7 +61,7 @@ public class GeneratePxEbeFiles {
 
             Integer loopGap = Integer.valueOf(ReadProperties.getInstance().getProperty("loopGap"));
 
-            searchFilesWeb(loopGap, endPoint, pxPrefix, pxURL, outputFolder);
+            searchFilesWeb(loopGap, endPoint, pxPrefix, pxURL, outputFolder, databases);
 
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -68,7 +73,7 @@ public class GeneratePxEbeFiles {
 
     }
 
-    public static void searchFilesWeb(int loopGap, int endPoint, String pxPrefix, String pxURL, String outputFolder) throws Exception {
+    public static void searchFilesWeb(int loopGap, int endPoint, String pxPrefix, String pxURL, String outputFolder, List<String> databases) throws Exception {
 
         int initialGap = loopGap;
 
@@ -86,16 +91,19 @@ public class GeneratePxEbeFiles {
 
                 Project proj = ReaderPxXML.readProject(page);
 
-                //Sometimes PeptideAtlas change the original identifier for that reason we need to override this value
-                proj.setAccession("PXD" + pxID);
+                if(proj != null && databases.contains(proj.getRepositoryName())){
+                    //Sometimes PeptideAtlas change the original identifier for that reason we need to override this value
+                    proj.setAccession("PXD" + pxID);
 
-                WriterEBeyeXML writer = new WriterEBeyeXML(proj,new File(outputFolder),null);
+                    WriterEBeyeXML writer = new WriterEBeyeXML(proj,new File(outputFolder),null);
 
-                writer.generate();
+                    writer.generate();
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-                logger.info(loopGap + "|" + proj.getAccession() + "|" + proj.getRepositoryName() + "|" + dateFormat.format(proj.getPublicationDate()) + "|" + getType(proj) + "|" + getFileType(proj) + "|" + getNumberFiles(proj) + "|" + getNumberPeakFile(proj));
+                    logger.info(loopGap + "|" + proj.getAccession() + "|" + proj.getRepositoryName() + "|" + dateFormat.format(proj.getPublicationDate()) + "|" + getType(proj) + "|" + getFileType(proj) + "|" + getNumberFiles(proj) + "|" + getNumberPeakFile(proj));
+                }
+
 
                 loopGap = initialGap;
 
