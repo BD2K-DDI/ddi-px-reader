@@ -47,9 +47,6 @@ public class GeneratePxEbeFiles {
         else{
             System.exit(-1);
         }
-
-
-
         try {
             String pxURL = ReadProperties.getInstance().getProperty("pxURL");
 
@@ -98,7 +95,7 @@ public class GeneratePxEbeFiles {
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-                System.out.println(proj.getAccession() + "\t" + proj.getRepositoryName() + "\t" + dateFormat.format(proj.getPublicationDate()) + "\t" + getType(proj) + "\t" + getFileType(proj) + "\t" + getNumberFiles(proj) + "\t" + getNumberPeakFile(proj));
+                logger.info(loopGap + "|" + proj.getAccession() + "|" + proj.getRepositoryName() + "|" + dateFormat.format(proj.getPublicationDate()) + "|" + getType(proj) + "|" + getFileType(proj) + "|" + getNumberFiles(proj) + "|" + getNumberPeakFile(proj));
 
                 loopGap = initialGap;
 
@@ -106,6 +103,7 @@ public class GeneratePxEbeFiles {
                 loopGap--;
             }
         }
+        logger.info("Search for Files has been FINISHED!!");
     }
 
     private static String getNumberPeakFile(Project proj) {
