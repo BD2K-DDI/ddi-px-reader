@@ -19,6 +19,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 
 import java.io.InputStream;
@@ -46,10 +47,25 @@ public class ReaderPxXML {
 
         Project project = null;
 
-        if(page != null)
+        if(page != null && validateXML(page) == true)
             project = parseDocument(page);
 
         return project;
+    }
+
+    private static boolean validateXML(String page) {
+
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = null;
+        try {
+            InputStream in = org.apache.commons.io.IOUtils.toInputStream(page, "UTF-8");
+            db = dbf.newDocumentBuilder();
+            db.parse(in);
+            return true;
+        } catch (Exception e) {
+            logger.error("ERROR PARSING THE FILE|" + e.getMessage());
+            return false;
+        }
     }
 
 

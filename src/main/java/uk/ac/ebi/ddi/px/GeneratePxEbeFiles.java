@@ -89,6 +89,7 @@ public class GeneratePxEbeFiles {
 
             if (page != null && isDataset(page)){
 
+
                 Project proj = ReaderPxXML.readProject(page);
 
                 if(proj != null && databases.contains(proj.getRepositoryName())){
@@ -104,11 +105,14 @@ public class GeneratePxEbeFiles {
                     logger.info(loopGap + "|" + proj.getAccession() + "|" + proj.getRepositoryName() + "|" + dateFormat.format(proj.getPublicationDate()) + "|" + getType(proj) + "|" + getFileType(proj) + "|" + getNumberFiles(proj) + "|" + getNumberPeakFile(proj));
                 }
 
+                logger.info(proj.getAccession()  + "|PX PROJECT FOUND IT|");
+
 
                 loopGap = initialGap;
 
             }else{
                 loopGap--;
+                logger.info(loopGap + "| LOGGER GAP CHANGE|");
             }
         }
         logger.info("Search for Files has been FINISHED!!");
@@ -193,6 +197,10 @@ public class GeneratePxEbeFiles {
         // send the request
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
+        connection.setConnectTimeout(10000); //set timeout to 10 seconds
+
+        connection.setReadTimeout(300000); // set timeout to 10 seconds
+
         connection.connect();
 
         // get the page
@@ -213,6 +221,9 @@ public class GeneratePxEbeFiles {
                 in.close();
             }
         }
+        logger.info(urlString);
+
+        connection.disconnect();
 
         return page.toString();
     }
