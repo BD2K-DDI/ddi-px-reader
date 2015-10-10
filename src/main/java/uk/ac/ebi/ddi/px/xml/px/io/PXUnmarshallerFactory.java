@@ -36,7 +36,7 @@ public class PXUnmarshallerFactory {
 
             //create unmarshaller
             Unmarshaller pum = jc.createUnmarshaller();
-            logger.info("Unmarshaller Initialized");
+            logger.debug("Unmarshaller Initialized");
 
             return pum;
 
