@@ -105,14 +105,14 @@ public class GeneratePxEbeFiles {
                     logger.info(loopGap + "|" + proj.getAccession() + "|" + proj.getRepositoryName() + "|" + dateFormat.format(proj.getPublicationDate()) + "|" + getType(proj) + "|" + getFileType(proj) + "|" + getNumberFiles(proj) + "|" + getNumberPeakFile(proj));
                 }
 
-                logger.info(proj.getAccession()  + "|PX PROJECT FOUND IT|");
+                logger.debug(proj.getAccession()  + "|PX PROJECT FOUND IT|");
 
 
                 loopGap = initialGap;
 
             }else{
                 loopGap--;
-                logger.info(loopGap + "| LOGGER GAP CHANGE|");
+                logger.debug(loopGap + "| LOGGER GAP CHANGE|");
             }
         }
         logger.info("Search for Files has been FINISHED!!");
@@ -188,44 +188,42 @@ public class GeneratePxEbeFiles {
      */
     private static String getPage(String urlString) throws Exception {
         // check if the page is cached
-        if (pageBuffer.containsKey(urlString))
-            return pageBuffer.get(urlString);
 
-        // create the url
-        URL url = new URL(urlString);
+        try{
+            if (pageBuffer.containsKey(urlString))
+                return pageBuffer.get(urlString);
 
-        // send the request
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            // create the url
+            URL url = new URL(urlString);
 
-        connection.setConnectTimeout(10000); //set timeout to 10 seconds
+            // send the request
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-        connection.setReadTimeout(300000); // set timeout to 10 seconds
+            connection.setConnectTimeout(10000); //set timeout to 10 seconds
 
-        connection.connect();
+            connection.setReadTimeout(300000); // set timeout to 10 seconds
 
-        // get the page
-        BufferedReader in = null;
-        StringBuilder page = new StringBuilder();
-        try {
+            connection.connect();
+
+            // get the page
+            BufferedReader in = null;
+            StringBuilder page = new StringBuilder();
+
             in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
             String line;
+
             while ((line = in.readLine()) != null) {
                 page.append(line);
                 page.append("\n");
             }
-        } catch (IOException ioe) {
+
+            return page.toString();
+        }catch (Exception ioe) {
             logger.warn("Failed to read web page");
-        } finally {
-            if (in != null) {
-                in.close();
-            }
         }
-        logger.info(urlString);
-
-        connection.disconnect();
-
-        return page.toString();
+        logger.debug(urlString);
+        return null;
     }
 
     private static boolean isPRIDEDataset(String pxSubmission){
