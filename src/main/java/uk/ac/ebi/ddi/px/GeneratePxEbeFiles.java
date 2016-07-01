@@ -31,8 +31,6 @@ public class GeneratePxEbeFiles {
 
     private static final Logger logger = LoggerFactory.getLogger(GeneratePxEbeFiles.class);
 
-    private static String PRIDE_PATTERN = "hostingRepository=\"PRIDE\"";
-
     private static final String PXSUBMISSION_PATTERN = "<ProteomeXchangeDataset";
 
     private static List<String> databases = Arrays.asList("PRIDE", "MassIVE", "PeptideAtlas");
@@ -227,7 +225,8 @@ public class GeneratePxEbeFiles {
     }
 
     private static boolean isPRIDEDataset(String pxSubmission){
-         return pxSubmission.contains(PRIDE_PATTERN);
+        String PRIDE_PATTERN = "hostingRepository=\"PRIDE\"";
+        return pxSubmission.contains(PRIDE_PATTERN);
     }
 
     private static boolean isDataset(String pxSubmission){
