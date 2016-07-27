@@ -61,7 +61,12 @@ public class PxReader {
      * @return name of repo
      */
     public String getRepositoryName(){
-        return dataset.getValue().getDatasetSummary().getHostingRepository().value();
+        if(dataset.getValue() != null &&
+                dataset.getValue().getDatasetSummary() != null &&
+                dataset.getValue().getDatasetSummary().getHostingRepository() != null &&
+                dataset.getValue().getDatasetSummary().getHostingRepository().value() != null)
+            return dataset.getValue().getDatasetSummary().getHostingRepository().value();
+        return null;
     }
 
     /**

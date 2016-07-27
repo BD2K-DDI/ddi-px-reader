@@ -90,7 +90,7 @@ public class GeneratePxEbeFiles {
 
                 Project proj = ReaderPxXML.readProject(page);
 
-                if(proj != null && databases.contains(proj.getRepositoryName())){
+                if(proj != null && proj.getRepositoryName() != null && databases.contains(proj.getRepositoryName())){
                     //Sometimes PeptideAtlas change the original identifier for that reason we need to override this value
                     proj.setAccession("PXD" + pxID);
 
