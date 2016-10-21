@@ -204,7 +204,7 @@ public class GeneratePxEbeFiles {
             connection.connect();
 
             // get the page
-            BufferedReader in = null;
+            BufferedReader in;
             StringBuilder page = new StringBuilder();
 
             in = new BufferedReader(new InputStreamReader(connection.getInputStream()));

@@ -55,7 +55,7 @@ public class ReaderPxXML {
     private static boolean validateXML(String page) {
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = null;
+        DocumentBuilder db;
         try {
             InputStream in = org.apache.commons.io.IOUtils.toInputStream(page, "UTF-8");
             db = dbf.newDocumentBuilder();
@@ -74,7 +74,7 @@ public class ReaderPxXML {
      * @return the Document
      */
     private static Document getDomElement(String xml){
-        Document doc = null;
+        Document doc;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
 
