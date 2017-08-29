@@ -260,7 +260,7 @@ public class WriterEBeyeXML {
                 for (CvParam species : project.getSpecies()) {
                     Element refSpecies = document.createElement("field");
                     refSpecies.setAttribute("name", "species");
-                    refSpecies.appendChild(document.createTextNode(species.getValue()));
+                    refSpecies.appendChild(document.createTextNode(ReadProperties.toTitleCase(species.getValue())));
                     additionalFields.appendChild(refSpecies);
                 }
             } else {
@@ -290,7 +290,7 @@ public class WriterEBeyeXML {
                 for (CvParam disease : project.getDiseases()) {
                     Element refDisease = document.createElement("field");
                     refDisease.setAttribute("name", "disease");
-                    refDisease.appendChild(document.createTextNode(disease.getName()));
+                    refDisease.appendChild(document.createTextNode(ReadProperties.toTitleCase(disease.getName())));
                     additionalFields.appendChild(refDisease);
                 }
             } else {
@@ -305,7 +305,7 @@ public class WriterEBeyeXML {
                 for (CvParam tissue : project.getTissues()) {
                     Element fieldTissue = document.createElement("field");
                     fieldTissue.setAttribute("name", "tissue");
-                    fieldTissue.appendChild(document.createTextNode(tissue.getName()));
+                    fieldTissue.appendChild(document.createTextNode(ReadProperties.toTitleCase(tissue.getName())));
                     additionalFields.appendChild(fieldTissue);
                 }
             } else {
